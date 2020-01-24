@@ -4,29 +4,25 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "cargo",
-            "subcommand": "build",
-            "problemMatcher": [
-                "$rustc"
-            ],
-            "group": "build"
-        },
-        {
             "label": "build cortex-m",
-            "type": "cargo",
-            "subcommand": "build",
+            "command": "cargo",
+            "type": "shell",
+            "args": [
+                "build",
+                "--target",
+                "thumbv7m-none-eabi"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": [
                 "$rustc"
-            ],
-            "group": "build"
+            ]
         },
-        {
-            "type": "cargo",
-            "subcommand": "test",
-            "problemMatcher": [
-                "$rustc"
-            ],
-            "group": "test"
-        }
     ]
 }
