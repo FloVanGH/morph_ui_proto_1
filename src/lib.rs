@@ -5,5 +5,6 @@
 
 #![no_std]
 
+pub mod platform;
 pub mod shell;
 pub mod prelude;

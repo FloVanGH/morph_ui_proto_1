@@ -13,7 +13,8 @@ fn main() -> ! {
  
     hprintln!("Hello, world!").unwrap();
 
-    let _shell = Shell {};
+    let mut shell = Shell {};
+    shell.start();
 
     // exit QEMU
     // NOTE do not run this on hardware; it can corrupt OpenOCD state
