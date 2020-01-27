@@ -10,6 +10,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.26"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7825f6833612eb2414095684fcf6c635becf3ce97fe48cf6421321e93bfbd53c"
+
+[[package]]
 name = "as-slice"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -64,9 +70,9 @@ dependencies = [
 
 [[package]]
 name = "cortex-m-rt"
-version = "0.6.11"
+version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33a716cd7d8627fae3892c2eede9249e50d2d79aedfb43ca28dad9a2b23876d9"
+checksum = "00d518da72bba39496024b62607c1d8e37bcece44b2536664f1132a73a499a28"
 dependencies = [
  "cortex-m-rt-macros",
  "r0",
@@ -74,9 +80,9 @@ dependencies = [
 
 [[package]]
 name = "cortex-m-rt-macros"
-version = "0.1.7"
+version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72b1073338d1e691b3b7aaf6bd61993e589ececce9242a02dfa5453e1b98918d"
+checksum = "4717562afbba06e760d34451919f5c3bf3ac15c7bb897e8b04862a7428378647"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -111,6 +117,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "heck"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "20564e78d53d2bb135c343b3f47714a56af2061f1c928fdb541dc7b9fdd94205"
+dependencies = [
+ "unicode-segmentation",
+]
+
+[[package]]
+name = "js-sys"
+version = "0.3.35"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7889c7c36282151f6bf465be4700359318aef36baa951462382eae49e9577cf9"
+dependencies = [
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -132,22 +156,47 @@ dependencies = [
 ]
 
 [[package]]
+name = "memchr"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3197e20c7edb283f87c071ddfc7a2cca8f8e0b888c242959846a6fce03c72223"
+
+[[package]]
 name = "memory_units"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
 
 [[package]]
-name = "morph"
+name = "minimal"
 version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",
+ "morph",
+ "wasm-bindgen",
+ "wasm-bindgen-test",
+ "wee_alloc",
+]
+
+[[package]]
+name = "morph"
+version = "0.1.0"
+dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "cortex-m-semihosting",
  "panic-halt",
  "wasm-bindgen",
- "wee_alloc",
+]
+
+[[package]]
+name = "nom"
+version = "4.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ad2a91a8e869eeb30b9cb3119ae87773a8f4ae617f41b1eb9c154b2905f7bd6"
+dependencies = [
+ "memchr",
+ "version_check",
 ]
 
 [[package]]
@@ -190,6 +239,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "scoped-tls"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ea6a9290e3c9cf0f18145ef7ffa62d68ee0bf5fcd651017e586dc7fd5da448c2"
+
+[[package]]
 name = "semver"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -203,6 +258,12 @@ name = "semver-parser"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
+
+[[package]]
+name = "sourcefile"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4bf77cb82ba8453b42b6ae1d692e4cdc92f9a47beaf89a847c8be83f4e328ad3"
 
 [[package]]
 name = "stable_deref_trait"
@@ -228,6 +289,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6d2783fe2d6b8c1101136184eb41be8b1ad379e4657050b8aaff0c79ee7575f9"
 
 [[package]]
+name = "unicode-segmentation"
+version = "1.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e83e153d1053cbb5a118eeff7fd5be06ed99153f00dbcd8ae310c5fb2b22edc0"
+
+[[package]]
 name = "unicode-xid"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -238,6 +305,12 @@ name = "vcell"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "876e32dcadfe563a4289e994f7cb391197f362b6315dc45e8ba4aa6f564a4b3c"
+
+[[package]]
+name = "version_check"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "914b1a6776c4c929a602fafd8bc742e06365d4bcbe48c30f9cca5824f70dc9dd"
 
 [[package]]
 name = "volatile-register"
@@ -274,6 +347,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "wasm-bindgen-futures"
+version = "0.4.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8bbdd49e3e28b40dec6a9ba8d17798245ce32b019513a845369c641b275135d9"
+dependencies = [
+ "cfg-if",
+ "js-sys",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "wasm-bindgen-macro"
 version = "0.2.58"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -303,6 +388,59 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f5e7e61fc929f4c0dddb748b102ebf9f632e2b8d739f2016542b4de2965a9601"
 
 [[package]]
+name = "wasm-bindgen-test"
+version = "0.3.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98fd0ec352c44d1726b6c2bec524612b1c81e34a7d858f597a6c71f8e018c82e"
+dependencies = [
+ "console_error_panic_hook",
+ "js-sys",
+ "scoped-tls",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "wasm-bindgen-test-macro",
+]
+
+[[package]]
+name = "wasm-bindgen-test-macro"
+version = "0.3.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "97837a6e83ab24a4b3a38d44a257e13335b54f4b4548b2c9d71edd0bf570cb4f"
+dependencies = [
+ "proc-macro2",
+ "quote",
+]
+
+[[package]]
+name = "wasm-bindgen-webidl"
+version = "0.2.58"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef012a0d93fc0432df126a8eaf547b2dce25a8ce9212e1d3cbeef5c11157975d"
+dependencies = [
+ "anyhow",
+ "heck",
+ "log",
+ "proc-macro2",
+ "quote",
+ "syn",
+ "wasm-bindgen-backend",
+ "weedle",
+]
+
+[[package]]
+name = "web-sys"
+version = "0.3.35"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aaf97caf6aa8c2b1dac90faf0db529d9d63c93846cca4911856f78a83cebf53b"
+dependencies = [
+ "anyhow",
+ "js-sys",
+ "sourcefile",
+ "wasm-bindgen",
+ "wasm-bindgen-webidl",
+]
+
+[[package]]
 name = "wee_alloc"
 version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -312,6 +450,15 @@ dependencies = [
  "libc",
  "memory_units",
  "winapi",
+]
+
+[[package]]
+name = "weedle"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3bb43f70885151e629e2a19ce9e50bd730fd436cfd4b666894c9ce4de9141164"
+dependencies = [
+ "nom",
 ]
 
 [[package]]

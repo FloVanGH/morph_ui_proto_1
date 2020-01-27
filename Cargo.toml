@@ -23,6 +23,10 @@ cortex-m-rt = "0.6.11"
 cortex-m-semihosting = "0.3.5"
 panic-halt = "0.2.0"
 
-# [[bin]]
-# name = "cortex_minimal"
-# path = "examples/cortex-m/minimal.rs"
+[target.wasm32-unknown-unknown.dependencies]
+wasm-bindgen = "0.2"
+console_error_panic_hook = { version = "0.1.6", optional = true }
+wee_alloc = { version = "0.4.5", optional = true }
+
+[target.wasm32-unknown-unknown.features]
+default = ["console_error_panic_hook"]
