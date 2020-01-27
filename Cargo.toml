@@ -19,7 +19,7 @@ test = false
 
 [target.thumbv7m-none-eabi.dependencies]
 cortex-m = "0.6.2"
-cortex-m-rt = "0.6.11"
+cortex-m-rt = "0.6.12"
 cortex-m-semihosting = "0.3.5"
 panic-halt = "0.2.0"
 
