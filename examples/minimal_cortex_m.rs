@@ -7,13 +7,10 @@ mod minimal;
 extern crate panic_halt;
 
 use cortex_m_rt::entry;
-use cortex_m_semihosting::{debug, hprintln};
+use cortex_m_semihosting::debug;
 
 #[entry]
 fn main() -> ! {
- 
-    hprintln!("Hello, world!").unwrap();
-
     minimal::start_example();
 
     // exit QEMU

@@ -182,6 +182,7 @@ dependencies = [
 name = "morph"
 version = "0.1.0"
 dependencies = [
+ "console_error_panic_hook",
  "cortex-m",
  "cortex-m-rt",
  "cortex-m-semihosting",

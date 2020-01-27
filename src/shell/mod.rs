@@ -1,3 +1,5 @@
+pub use self::platform::log;
+
 use crate::platform;
 
 /// The `Shell` is the main entry point of your application. It could compare with a combination of an application and window struct.
@@ -26,7 +28,8 @@ impl Shell {
 
     /// Start and run the application.
     pub fn start(mut self) {
-        platform::main_loop(move || {
+        log("Start");
+        platform::main_loop(move || {    
             self.drain_events();
             self.update();
             self.draw();

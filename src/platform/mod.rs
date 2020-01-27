@@ -1,7 +1,7 @@
 pub use self::platform::*;
 
-#[cfg(not(target_arch = "wasm32"))]
-#[path = "native/mod.rs"]
+#[cfg(all(target_arch = "arm", target_os = "none"))]
+#[path = "cortex_m/mod.rs"]
 mod platform;
 
 #[cfg(target_arch = "wasm32")]
