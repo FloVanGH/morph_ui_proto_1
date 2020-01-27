@@ -25,8 +25,8 @@ impl Shell {
     }
 
     /// Start and run the application.
-    pub fn start(&mut self) {
-        platform::main_loop(|| {
+    pub fn start(mut self) {
+        platform::main_loop(move || {
             self.drain_events();
             self.update();
             self.draw();

@@ -10,7 +10,9 @@
             "args": [
                 "build",
                 "--target",
-                "thumbv7m-none-eabi"
+                "thumbv7m-none-eabi",
+                "--features",
+                "no_std"
             ],
             "presentation": {
                 "reveal": "always",

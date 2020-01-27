@@ -1,6 +1,10 @@
+use std::{cell::RefCell, rc::Rc};
+
 mod utils;
 
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
+use web_sys;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -8,7 +12,29 @@ use wasm_bindgen::prelude::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
+
+fn window() -> web_sys::Window {
+    web_sys::window().expect("no global `window` exists")
+}
+
+
+fn request_animation_frame(f: &Closure<dyn FnMut()>) {
+    window()
+        .request_animation_frame(f.as_ref().unchecked_ref())
+        .expect("should register `requestAnimationFrame` OK");
+}
+
 /// Platform dependent main loop.
-pub fn main_loop<R: FnMut()>(mut run: R) {
-  
+pub fn main_loop<R: FnMut() + 'static>(mut run: R) {
+    if let Some(window) = web_sys::window() {
+        let f = Rc::new(RefCell::new(None));
+        let g = f.clone();
+
+
+        *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+            run();
+        }) as Box<dyn FnMut()>));
+
+        request_animation_frame(g.borrow().as_ref().unwrap());  
+    }
 }

@@ -187,6 +187,7 @@ dependencies = [
  "cortex-m-semihosting",
  "panic-halt",
  "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]

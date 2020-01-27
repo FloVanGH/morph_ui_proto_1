@@ -3,7 +3,7 @@
 //! in a browser with WebAssembly.
 //! 
 
-#![no_std]
+#![cfg_attr(feature = "no_std", no_std)]
 
 pub mod platform;
 pub mod shell;
