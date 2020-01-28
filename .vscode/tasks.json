@@ -12,7 +12,9 @@
                 "--target",
                 "thumbv7m-none-eabi",
                 "--features",
-                "no_std"
+                "no_std",
+                "--example",
+                "minimal_cortex_m"
             ],
             "presentation": {
                 "reveal": "always",

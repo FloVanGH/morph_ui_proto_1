@@ -1,8 +1,8 @@
-use cortex_m_semihosting::hprintln;
+use cortex_m_semihosting::export::hstdout_str;
 
 /// Outputs a message to the console.
 pub fn log(msg: &str) {
-    // hprintln!(msg.as_bytes()).unwrap();
+    hstdout_str(msg).unwrap();
 }
 
 /// Platform dependent main loop.
