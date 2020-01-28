@@ -1,5 +1,5 @@
 use morph::prelude::*;
 
 pub fn start_example() {
-    Shell::new().start();
+    let _result = Shell::new().start();
 }

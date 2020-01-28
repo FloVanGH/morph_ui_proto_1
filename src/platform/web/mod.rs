@@ -6,6 +6,8 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys;
 
+use crate::result::MorphResult;
+
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
 #[cfg(feature = "wee_alloc")]
@@ -28,17 +30,29 @@ pub fn log(msg: &str) {
 }
 
 /// Platform dependent main loop.
-pub fn main_loop<R: FnMut() + 'static>(mut run: R) {
+pub fn main_loop<R: FnMut() -> MorphResult<()> + 'static >(mut run: R) -> MorphResult<()> {
     utils::set_panic_hook();
 
+    let err = Rc::new(RefCell::new(Ok(())));
+    let c_err = err.clone();
     let f = Rc::new(RefCell::new(None));
     let g = f.clone();
 
     *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
-        run();
+        let result = run();
+
+        if result.is_err() {
+            *c_err.borrow_mut() = result;
+            return;
+        }
+       
         // Schedule ourself for another requestAnimationFrame callback.
         request_animation_frame(f.borrow().as_ref().unwrap());
+       
     }) as Box<dyn FnMut()>));
 
     request_animation_frame(g.borrow().as_ref().unwrap());
+
+    let result = err.borrow();
+    result.clone()
 }

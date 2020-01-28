@@ -5,6 +5,7 @@
 
 #![cfg_attr(feature = "no_std", no_std)]
 
-pub mod platform;
+mod platform;
 pub mod shell;
 pub mod prelude;
+pub mod result;

@@ -17,6 +17,9 @@ name = "morph"
 path = "src/lib.rs"
 test = false
 
+[dependencies]
+heapless = "0.5.3"
+
 [target.thumbv7m-none-eabi.dependencies]
 cortex-m = "0.6.2"
 cortex-m-rt = "0.6.12"
