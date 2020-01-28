@@ -7,7 +7,15 @@ use crate::platform;
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
 pub struct Shell {
+    is_running: bool
+}
 
+impl Shell {
+    pub fn new() -> Self {
+        Shell {
+            is_running: true
+        }
+    }
 }
 
 impl Shell {
@@ -30,6 +38,9 @@ impl Shell {
     pub fn start(mut self) {
         log("Start");
         platform::main_loop(move || {    
+            if !self.is_running {
+                return;
+            }
             self.drain_events();
             self.update();
             self.draw();
