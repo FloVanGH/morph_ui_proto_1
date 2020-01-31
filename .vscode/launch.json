@@ -34,10 +34,10 @@
             // "executable": "./target/thumbv7em-none-eabihf/debug/examples/itm",
             "device": "STM32F103C8T6",
             "configFiles": [
-                "interface/stlink-v2-1.cfg",
-                "target/stm32f3x.cfg"
+                "interface/stlink-v2.fg",
+                "target/stm32f1x.cfg"
             ],
-            "svdFile": "${workspaceRoot}/.vscode/STM32F303.svd",
+            "svdFile": "${workspaceRoot}/.vscode/stm32f1x.svd",
             "swoConfig": {
                 "enabled": true,
                 "cpuFrequency": 8000000,
