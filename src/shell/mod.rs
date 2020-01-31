@@ -33,7 +33,7 @@ impl Shell {
         Ok(())
     }
 
-    /// Start and run the application.
+    /// Start and run the shell.
     pub fn start(mut self)  -> MorphResult<()> {
         log("Start");
         platform::main_loop(move || {

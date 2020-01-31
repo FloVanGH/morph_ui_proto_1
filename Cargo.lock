@@ -105,6 +105,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "embedded-graphics"
+version = "0.6.0-alpha.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f35680a4c0a85844fd207ba20eb4a3611189bb714cdb3b2327edd9f0e9f562eb"
+dependencies = [
+ "byteorder",
+]
+
+[[package]]
 name = "generic-array"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -120,26 +129,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ed1e761351b56f54eb9dcd0cfaca9fd0daecf93918e1cfc01c8a3d26ee7adcd"
 dependencies = [
  "typenum",
-]
-
-[[package]]
-name = "hash32"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4041af86e63ac4298ce40e5cca669066e75b6f1aa3390fe2561ffa5e1d9f4cc"
-dependencies = [
- "byteorder",
-]
-
-[[package]]
-name = "heapless"
-version = "0.5.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10b591a0032f114b7a77d4fbfab452660c553055515b7d7ece355db080d19087"
-dependencies = [
- "as-slice",
- "generic-array 0.13.2",
- "hash32",
 ]
 
 [[package]]
@@ -201,7 +190,7 @@ dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "cortex-m-semihosting",
- "heapless",
+ "embedded-graphics",
  "panic-halt",
  "wasm-bindgen",
  "web-sys",
