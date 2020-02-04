@@ -37,10 +37,10 @@
                 "interface/stlink-v2.fg",
                 "target/stm32f1x.cfg"
             ],
-            "svdFile": "${workspaceRoot}/.vscode/stm32f1x.svd",
+            "svdFile": "${workspaceRoot}/.vscode/STM32F103.svd",
             "swoConfig": {
                 "enabled": true,
-                "cpuFrequency": 8000000,
+                "cpuFrequency": 73000000,
                 "swoFrequency": 2000000,
                 "source": "probe",
                 "decoders": [
