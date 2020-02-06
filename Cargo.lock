@@ -10,6 +10,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "alloc-cortex-m"
+version = "0.3.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d5f7d01bc93ce089de636f946f7f1fdc5e5d751732367e019c9755440e7aef4"
+dependencies = [
+ "cortex-m 0.1.8",
+ "linked_list_allocator",
+]
+
+[[package]]
 name = "anyhow"
 version = "1.0.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -74,13 +84,22 @@ dependencies = [
 
 [[package]]
 name = "cortex-m"
+version = "0.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3df5de9a9829f2ccb7defa8945fa020c6614cd2f6ba9b5f33db9241dcc01985e"
+dependencies = [
+ "volatile-register 0.1.2",
+]
+
+[[package]]
+name = "cortex-m"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2954942fbbdd49996704e6f048ce57567c3e1a4e2dc59b41ae9fde06a01fc763"
 dependencies = [
  "aligned",
  "bare-metal",
- "volatile-register",
+ "volatile-register 0.2.0",
 ]
 
 [[package]]
@@ -110,7 +129,7 @@ version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "113ef0ecffee2b62b58f9380f4469099b30e9f9cbee2804771b4203ba1762cfa"
 dependencies = [
- "cortex-m",
+ "cortex-m 0.6.2",
 ]
 
 [[package]]
@@ -178,6 +197,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d515b1f41455adea1313a4a2ac8a8a477634fbae63cc6100e3aebb207ce61558"
 
 [[package]]
+name = "linked_list_allocator"
+version = "0.6.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47de1a43fad0250ee197e9e124e5b5deab3d7b39d4428ae8a6d741ceb340c362"
+
+[[package]]
 name = "log"
 version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -202,11 +227,14 @@ checksum = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
 name = "morph"
 version = "0.1.0"
 dependencies = [
+ "alloc-cortex-m",
  "console_error_panic_hook",
- "cortex-m",
+ "cortex-m 0.6.2",
  "cortex-m-rt",
  "cortex-m-semihosting",
  "embedded-graphics",
+ "embedded-hal",
+ "nb",
  "panic-halt",
  "st7735-lcd",
  "stm32f1xx-hal",
@@ -355,7 +383,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "22ce629123831891663402861bdc7140ebfd6a34a464329f9b9ec1cfde72055a"
 dependencies = [
  "bare-metal",
- "cortex-m",
+ "cortex-m 0.6.2",
  "vcell",
 ]
 
@@ -367,7 +395,7 @@ checksum = "455bf444813cdc2498130626c5d0ca42f91de1e8261751f3bdc6e5ad9e2aa128"
 dependencies = [
  "as-slice",
  "cast",
- "cortex-m",
+ "cortex-m 0.6.2",
  "cortex-m-rt",
  "embedded-hal",
  "nb",
@@ -438,6 +466,12 @@ name = "void"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
+
+[[package]]
+name = "volatile-register"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a470889aa8f2d3ad893bd43cd90c824e63e8ac0ee5fe64c5d81a932d184fd549"
 
 [[package]]
 name = "volatile-register"
