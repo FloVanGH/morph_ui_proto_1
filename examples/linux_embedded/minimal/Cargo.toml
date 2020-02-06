@@ -1,0 +1,8 @@
+[package]
+name = "minimal"
+version = "0.1.0"
+authors = ["Florian Blasius <flovanpt@posteo.de>"]
+edition = "2018"
+
+[dependencies]
+morph = { path = "../../../" }

@@ -4,17 +4,15 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build minimal cortex-m",
+            "label": "build minimal stm32f_xxx",
             "command": "cargo",
             "type": "shell",
             "args": [
                 "build",
+                "--manifest-path",
+                "${workspaceRoot}/examples/stm32f_xxx/minimal/Cargo.toml",
                 "--target",
-                "thumbv7m-none-eabi",
-                "--features",
-                "no_std",
-                "--example",
-                "minimal_cortex_m"
+                "thumbv7m-none-eabi"
             ],
             "presentation": {
                 "reveal": "always",
