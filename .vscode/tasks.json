@@ -27,6 +27,29 @@
             ]
         },
         {
+            "label": "build minimal linux-embedded",
+            "command": "cargo",
+            "type": "shell",
+            "args": [
+                "build",
+                "--manifest-path",
+                "${workspaceRoot}/examples/linux_embedded/minimal/Cargo.toml",
+                "--target",
+                "armv7-unknown-linux-gnueabihfi"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$rustc"
+            ]
+        },
+        {
             "label": "build minimal wasm32",
             "command": "wasm-pack",
             "type": "shell",

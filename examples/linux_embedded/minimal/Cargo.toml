@@ -5,4 +5,6 @@ authors = ["Florian Blasius <flovanpt@posteo.de>"]
 edition = "2018"
 
 [dependencies]
+linux-embedded-hal = "0.2.2"
+st7735 = { git = "https://codeberg.org/morph/st7735-rs.git" }
 morph = { path = "../../../" }

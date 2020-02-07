@@ -9,6 +9,9 @@
 runner = "gdb-multiarch -q -x openocd.gdb"
 # runner = "gdb -q -x openocd.gdb"
 
+#[target.armv7-unknown-linux-gnueabihf]
+#linker = "arm-linux-gnueabihf-gcc-4.7"
+
 rustflags = [
   # LLD (shipped with the Rust toolchain) is used as the default linker
   "-C", "link-arg=-Tlink.x",

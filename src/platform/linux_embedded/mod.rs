@@ -5,6 +5,6 @@ mod common;
 
 /// Outputs a message to the console.
 pub fn log(msg: &str) {
-    println!(msg);
+    println!("{}", msg);
 }
 
