@@ -50,7 +50,7 @@
             ]
         },
         {
-            "label": "build minimal wasm32",
+            "label": "minimal build wasm-pack",
             "command": "wasm-pack",
             "type": "shell",
             "args": [
@@ -65,5 +65,22 @@
                 "$rustc"
             ]
         },
+        {
+            "label": "minimal npm install",
+            "command": "npm",
+            "type": "shell",
+            "dependsOn": ["minimal build wasm-pack"],
+            "args": [
+                "install",
+                "examples/wasm32/minimal/www"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$rustc"
+            ]
+        }
     ]
 }
