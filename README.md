@@ -35,12 +35,6 @@ npm install npm@latest -g
 
 ### Run minimal example
 
-Run this command on the minimal example project directory:  
-
-```shell
-wasm-pack build
-```
-
 Navigate to the `www` sub directory and run:
 
 ```shell
@@ -50,7 +44,7 @@ npm install
 To serve the example locally run:
 
 ```shell
-npm run start
+npm run serve
 ```
 
 Navigate your Web browser to http://localhost:8080/
