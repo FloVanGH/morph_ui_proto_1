@@ -1,6 +1,6 @@
 # morph
 
-Embedded Rust UI-Toolkit (no_std).
+Embedded Rust UI-Toolkit (no_std). Morph in shape.
 
 ## Usage
 
