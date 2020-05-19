@@ -1,7 +1,6 @@
 pub use self::platform::log;
 
-use crate::platform;
-use crate::result::*;
+use crate::{platform, result::*, geometry::Size};
 
 /// The `Shell` is the main entry point of your application. It could compare with a combination of an application and window struct.
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
@@ -9,11 +8,12 @@ use crate::result::*;
 /// set of backend e.g. for WebAssembly and cortex-m processors.
 pub struct Shell {
     is_running: bool,
+    size: Size
 }
 
 impl Shell {
     pub fn new() -> Self {
-        Shell { is_running: true }
+        Shell { is_running: true, size: Size::default() }
     }
 }
 
@@ -31,6 +31,12 @@ impl Shell {
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
         Ok(())
+    }
+
+    /// Sets the size the application shell should use to draw on the screen.
+    pub fn size(mut self, size: impl Into<Size>) -> Self {
+        self.size = size.into();
+        self
     }
 
     /// Start and run the shell.

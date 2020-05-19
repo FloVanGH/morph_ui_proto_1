@@ -1,5 +1,7 @@
-use crate::geometry::Size;
-use super::RenderContext;
+use wasm_bindgen::prelude::*;
+
+use crate::{geometry::Size, result::*};
+use super::{RenderContext, super::utils};
 
 /// The `RenderTarget` is used to draw the content of a `RenderContext` on the screen.
 pub struct RenderTarget {
@@ -8,10 +10,13 @@ pub struct RenderTarget {
 
 impl RenderTarget {
     /// Creates a new render target from the given size.
-    pub fn new(size: Size) -> Self {
-        RenderTarget {
+    pub fn new(size: Size) -> MorphResult<Self> {
+
+        let body = utils::body()?;
+
+        Ok(RenderTarget {
             size
-        }
+        })
     }
 
     /// Draw the given `RenderContext` on the screen.

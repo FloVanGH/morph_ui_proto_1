@@ -44,6 +44,7 @@ wee_alloc = { version = "0.4.5", optional = true }
         'Document',
         'Element',
         'HtmlCanvasElement',
+        'HtmlElement',
         'Window',
     ]
 
