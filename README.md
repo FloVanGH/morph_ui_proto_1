@@ -1,6 +1,8 @@
 # morph
 
-Embedded Rust UI-Toolkit (no_std).
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
+Embedded Rust UI-Toolkit (no_std). Morph in shape.
 
 ## Usage
 
