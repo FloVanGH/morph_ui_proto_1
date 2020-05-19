@@ -12,6 +12,10 @@ impl RenderTarget {
     /// Creates a new render target from the given size.
     pub fn new(size: Size) -> MorphResult<Self> {
 
+        let canvas = {
+            utils::document()?.get_element_by_id("morph_canvas")
+        };
+
         let body = utils::body()?;
 
         Ok(RenderTarget {

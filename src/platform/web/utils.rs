@@ -1,5 +1,5 @@
 use wasm_bindgen::prelude::*;
-use web_sys::HtmlElement;
+use web_sys::{HtmlElement, Document, Window};
 
 use crate::result::*;
 
@@ -14,8 +14,8 @@ pub fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
-/// Gets the body of the browser document.
-pub fn body() -> MorphResult<HtmlElement> {
+/// Gets the browser window.
+pub fn window() -> MorphResult<Window> {
     let window = web_sys::window();
 
     if window.is_none() {
@@ -24,7 +24,12 @@ pub fn body() -> MorphResult<HtmlElement> {
         ));
     }
 
-    let document = window.unwrap().document();
+    Ok(window.unwrap())
+}
+
+/// Gets the document of the browser window.
+pub fn document() -> MorphResult<Document> {
+    let document = window()?.document();
 
     if document.is_none() {
         return Err(MorphError::Backend(
@@ -32,7 +37,12 @@ pub fn body() -> MorphResult<HtmlElement> {
         ));
     }
 
-    let body = document.unwrap().body();
+    Ok(document.unwrap())
+}
+
+/// Gets the body of the browser document.
+pub fn body() -> MorphResult<HtmlElement> {
+    let body = document()?.body();
 
     if body.is_none() {
         return Err(MorphError::Backend(
