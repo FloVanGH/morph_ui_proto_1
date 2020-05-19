@@ -39,6 +39,8 @@ wee_alloc = { version = "0.4.5", optional = true }
 [target.wasm32-unknown-unknown.dependencies.web-sys]
     version = "0.3.4"
     features = [
+        'Node',
+        'Element',
         'console', 
         'CanvasRenderingContext2d',
         'Document',

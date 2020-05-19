@@ -1,5 +1,5 @@
 use wasm_bindgen::prelude::*;
-use web_sys::{HtmlElement, Document, Window};
+use web_sys::{Document, HtmlElement, Window};
 
 use crate::result::*;
 
@@ -16,39 +16,21 @@ pub fn set_panic_hook() {
 
 /// Gets the browser window.
 pub fn window() -> MorphResult<Window> {
-    let window = web_sys::window();
-
-    if window.is_none() {
-        return Err(MorphError::Backend(
-            "utils::body: no global `windows` exists.",
-        ));
-    }
-
-    Ok(window.unwrap())
+    web_sys::window().ok_or(MorphError::Backend(
+        "utils::body: no global `windows` exists.",
+    ))
 }
 
 /// Gets the document of the browser window.
 pub fn document() -> MorphResult<Document> {
-    let document = window()?.document();
-
-    if document.is_none() {
-        return Err(MorphError::Backend(
-            "utils::body: should have a document on window.",
-        ));
-    }
-
-    Ok(document.unwrap())
+    window()?.document().ok_or(MorphError::Backend(
+        "utils::body: should have a document on window.",
+    ))
 }
 
 /// Gets the body of the browser document.
 pub fn body() -> MorphResult<HtmlElement> {
-    let body = document()?.body();
-
-    if body.is_none() {
-        return Err(MorphError::Backend(
-            "utils::body: document should have a body.",
-        ));
-    }
-
-    Ok(body.unwrap())
+    document()?.body().ok_or(MorphError::Backend(
+        "utils::body: document should have a body.",
+    ))
 }

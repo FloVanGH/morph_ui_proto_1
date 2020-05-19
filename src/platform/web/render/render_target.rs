@@ -1,11 +1,13 @@
 use wasm_bindgen::prelude::*;
+use web_sys::HtmlCanvasElement;
 
 use crate::{geometry::Size, result::*};
 use super::{RenderContext, super::utils};
 
 /// The `RenderTarget` is used to draw the content of a `RenderContext` on the screen.
 pub struct RenderTarget {
-    size: Size
+    size: Size,
+    // canvas: HtmlCanvasElement
 }
 
 impl RenderTarget {
@@ -13,10 +15,21 @@ impl RenderTarget {
     pub fn new(size: Size) -> MorphResult<Self> {
 
         let canvas = {
-            utils::document()?.get_element_by_id("morph_canvas")
+            if let Some(canvas) = utils::document()?.get_element_by_id("morph_canvas") {
+                Some(canvas)
+            } else {
+                if let Ok(canvas) = utils::document()?.create_element("canvas") {
+                    utils::body()?.append_child(&canvas);
+                    Some(canvas)
+                }  else {
+                    None
+                }
+            }
         };
 
-        let body = utils::body()?;
+        
+
+
 
         Ok(RenderTarget {
             size
