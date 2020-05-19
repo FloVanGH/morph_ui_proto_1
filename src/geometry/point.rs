@@ -3,7 +3,7 @@ use core::ops::{Add, Sub};
 use derive_more::{Constructor, From, Into};
 
 /// Represents a (pixel) position on the screen.
-#[derive(Default, Debug, From, Into, PartialEq, Constructor)]
+#[derive(Default, Copy, Clone, Debug, From, Into, PartialEq, Constructor)]
 pub struct Point {
     x: u32,
     y: u32

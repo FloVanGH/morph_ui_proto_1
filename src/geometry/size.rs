@@ -1,7 +1,7 @@
 use derive_more::{Constructor, From, Into};
 
 /// Represents the (pixel) size of an visual object on the screen.
-#[derive(Default, Debug, From, Into, PartialEq, Constructor)]
+#[derive(Default, Copy, Clone, Debug, From, Into, PartialEq, Constructor)]
 pub struct Size {
     width: u32,
     height: u32

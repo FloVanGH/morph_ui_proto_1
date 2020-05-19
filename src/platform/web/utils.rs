@@ -1,5 +1,6 @@
 use wasm_bindgen::prelude::*;
-use web_sys::{Document, HtmlElement, Window};
+use wasm_bindgen::JsCast;
+use web_sys::{Document, HtmlCanvasElement, HtmlElement, Window};
 
 use crate::result::*;
 
@@ -33,4 +34,32 @@ pub fn body() -> MorphResult<HtmlElement> {
     document()?.body().ok_or(MorphError::Backend(
         "utils::body: document should have a body.",
     ))
+}
+
+/// Gets a canvas by the given id or create it if it does not exists.
+pub fn canvas(id: &str) -> MorphResult<HtmlCanvasElement> {
+    let canvas = {
+        if let Some(canvas) = document()?.get_element_by_id(id) {
+            Some(canvas)
+        } else {
+            if let Ok(canvas) = document()?.create_element("canvas") {
+                canvas.set_id(id);
+                body()?.append_child(&canvas);
+                Some(canvas)
+            } else {
+                None
+            }
+        }
+    };
+
+    canvas.map_or(
+        Err(MorphError::Backend(
+            "utils::canvas: Could not create canvas.",
+        )),
+        |c| {
+            c.dyn_into::<HtmlCanvasElement>().map_err(|_| MorphError::Backend(
+                "utils::canvas: Could not convert canvas.",
+            ))
+        },
+    )
 }

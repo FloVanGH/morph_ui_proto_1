@@ -1,6 +1,6 @@
 pub use self::platform::log;
 
-use crate::{platform, result::*, geometry::Size};
+use crate::{platform, render::RenderTarget, result::*, geometry::Size};
 
 /// The `Shell` is the main entry point of your application. It could compare with a combination of an application and window struct.
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
@@ -29,7 +29,7 @@ impl Shell {
     }
 
     // Draws everything.
-    fn draw(&mut self) -> MorphResult<()> {
+    fn draw(&mut self, render_target: &mut RenderTarget) -> MorphResult<()> {
         Ok(())
     }
 
@@ -42,6 +42,8 @@ impl Shell {
     /// Start and run the shell.
     pub fn start(mut self)  -> MorphResult<()> {
         log("Start");
+        let mut render_target = RenderTarget::new(self.size)?;
+
         platform::main_loop(move |running| {
             if !self.is_running {
                 *running = false;
@@ -49,7 +51,7 @@ impl Shell {
             }
             self.drain_events()?;
             self.update()?;
-            self.draw()?;
+            self.draw(&mut render_target)?;
 
             Ok(())
         })
