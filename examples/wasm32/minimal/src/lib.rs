@@ -6,4 +6,4 @@ mod minimal;
 #[wasm_bindgen(start)]
 pub fn start() {
     minimal::start_example();
-}
+}    

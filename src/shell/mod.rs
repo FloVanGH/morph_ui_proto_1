@@ -36,8 +36,9 @@ impl Shell {
     /// Start and run the shell.
     pub fn start(mut self)  -> MorphResult<()> {
         log("Start");
-        platform::main_loop(move || {
+        platform::main_loop(move |running| {
             if !self.is_running {
+                *running = false;
                 return Ok(());
             }
             self.drain_events()?;

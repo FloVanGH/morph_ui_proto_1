@@ -5,6 +5,8 @@
 
 #![cfg_attr(feature = "no_std", no_std)]
 
+pub use platform::render;
+pub mod geometry;
 mod platform;
 pub mod shell;
 pub mod prelude;

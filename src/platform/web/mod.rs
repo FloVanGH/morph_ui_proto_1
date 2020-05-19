@@ -8,7 +8,7 @@ use web_sys;
 
 use crate::result::MorphResult;
 
-pub mod render_context;
+pub mod render;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -32,7 +32,7 @@ pub fn log(msg: &str) {
 }
 
 /// Platform dependent main loop.
-pub fn main_loop<R: FnMut() -> MorphResult<()> + 'static >(mut run: R) -> MorphResult<()> {
+pub fn main_loop<R: FnMut(&mut bool) -> MorphResult<()> + 'static >(mut run: R) -> MorphResult<()> {
     utils::set_panic_hook();
 
     let err = Rc::new(RefCell::new(Ok(())));
@@ -40,8 +40,10 @@ pub fn main_loop<R: FnMut() -> MorphResult<()> + 'static >(mut run: R) -> MorphR
     let f = Rc::new(RefCell::new(None));
     let g = f.clone();
 
+    let mut running = true;
+
     *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
-        let result = run();
+        let result = run(&mut running);
 
         if result.is_err() {
             *c_err.borrow_mut() = result;

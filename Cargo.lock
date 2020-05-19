@@ -133,6 +133,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "derive_more"
+version = "0.99.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2127768764f1556535c01b5326ef94bd60ff08dcfbdc544d53e69ed155610f5d"
+dependencies = [
+ "proc-macro2 1.0.8",
+ "quote 1.0.2",
+ "syn 1.0.14",
+]
+
+[[package]]
 name = "embedded-graphics"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -232,6 +243,7 @@ dependencies = [
  "cortex-m 0.6.2",
  "cortex-m-rt",
  "cortex-m-semihosting",
+ "derive_more",
  "embedded-graphics",
  "embedded-hal",
  "nb",
