@@ -2,8 +2,9 @@
 //! the main application. It also contains different widgets and layouts to build an user interface. morph could also run
 //! in a browser with WebAssembly.
 //! 
-
-#![cfg_attr(feature = "no_std", no_std)]
+// #![cfg(not(target_arch = "arm"))]
+// #![cfg_attr(feature = "no_std", no_std)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 pub mod geometry;
 pub mod graphics;

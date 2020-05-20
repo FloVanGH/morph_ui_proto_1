@@ -4,8 +4,8 @@ pub use self::platform::*;
 #[path = "cortex_m/mod.rs"]
 mod platform;
 
-#[cfg(target_os = "linux")]
-#[path = "linux_embedded/mod.rs"]
+#[cfg(all(not(target_arch), not(target_arch = "arm")))]
+#[path = "desktop/mod.rs"]
 mod platform;
 
 #[cfg(target_arch = "wasm32")]

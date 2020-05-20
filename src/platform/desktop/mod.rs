@@ -1,12 +1,10 @@
 pub use self::common::main_loop;
+pub use self::graphics::*;
 
 #[path = "../common/mod.rs"]
 mod common;
+mod graphics;
 
-pub mod render_context;
-
-/// Outputs a message to the console.
 pub fn log(msg: &str) {
     println!("{}", msg);
 }
-

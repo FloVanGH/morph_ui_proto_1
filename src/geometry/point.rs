@@ -52,3 +52,39 @@ impl Add for Point {
         }
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_sub() {
+        let left = Point::new(5, 5);
+        let right = Point::new(2, 3);
+        assert_eq!(Point::new(3, 2), left - right);
+
+        let left = Point::new(0, 0);
+        let right = Point::new(2, 3);
+        assert_eq!(Point::new(-2, -3), left - right);
+
+        let left = Point::new(-2, -3);
+        let right = Point::new(2, -3);
+        assert_eq!(Point::new(-4, 0), left - right);
+    }
+
+    #[test]
+    fn test_add() {
+        let left = Point::new(5, 5);
+        let right = Point::new(2, 3);
+        assert_eq!(Point::new(7, 8), left + right);
+
+        let left = Point::new(0, 0);
+        let right = Point::new(2, 3);
+        assert_eq!(Point::new(2, 3), left + right);
+
+        let left = Point::new(-2, -3);
+        let right = Point::new(2, -3);
+        assert_eq!(Point::new(0, -6), left + right);
+    }
+}

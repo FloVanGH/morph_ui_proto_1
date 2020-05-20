@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use crate::{geometry::Size, result::*};
 
 use super::RenderContext;

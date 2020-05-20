@@ -1,5 +1,6 @@
-use morph::prelude::*;
+#[path = "minimal/minimal.rs"]
+mod minimal;
 
-pub fn start_example() {
-    let _result = shell().unwrap().size((100, 100)).start();
+fn main() {
+    minimal::start_example();
 }

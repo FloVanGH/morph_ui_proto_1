@@ -1,9 +1,10 @@
 [package]
 authors = ["Florian Blasius <flovanpt@posteo.de>"]
-description = ""
+description = "Embedded Rust UI-Toolkit (no_std)."
 edition = "2018"
 repository = "https://codeberg.org/morph/morph"
 readme = "README.md"
+license = "MIT"
 name = "morph"
 version = "0.1.0"
 keywords = [
@@ -51,8 +52,8 @@ wee_alloc = { version = "0.4.5", optional = true }
     ]
 
 [features]
-default = ["console_error_panic_hook"]
-no_std = []
+default = ["console_error_panic_hook", "std"]
+std = []
 
 [[examples]]
 name = "minimal_cortex_m"
