@@ -1,6 +1,6 @@
 use crate::geometry::*;
 
-/// Provides the 2D rendering context .
+/// The `RenderContext` provides different draw methods.
 pub trait RenderContext {
     /// Starts a new path by emptying the list of sub-paths. Call this when you want to create a new path.
     fn begin_path(&mut self);

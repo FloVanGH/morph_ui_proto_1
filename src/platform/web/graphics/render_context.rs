@@ -6,7 +6,7 @@ use wasm_bindgen::JsCast;
 use super::super::utils;
 use crate::{geometry::*, graphics, result::*};
 
-/// The `RenderContext` provides different draw methods.
+/// The `RenderContext` provides different draw methods. This implementation is based on the web_sys crate and is used to draw an a browser canvas.
 #[derive(Clone, Debug, PartialEq)]
 pub struct RenderContext {
     canvas: web_sys::HtmlCanvasElement,
