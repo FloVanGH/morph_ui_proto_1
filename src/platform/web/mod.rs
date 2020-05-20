@@ -8,7 +8,9 @@ use web_sys;
 
 use crate::result::MorphResult;
 
-pub mod render;
+pub use self::graphics::*;
+
+mod graphics;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.

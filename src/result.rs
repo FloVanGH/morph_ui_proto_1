@@ -7,7 +7,7 @@
 pub type MorphResult<T> = Result<T, MorphError>;
 
 /// Represents an custom morph error and is used by `MorphResult`.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum MorphError {
     /// Backend (platform specific) error
     Backend(&'static str),

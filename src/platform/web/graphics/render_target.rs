@@ -3,22 +3,37 @@ use wasm_bindgen::JsCast;
 use web_sys::HtmlCanvasElement;
 
 use super::{super::utils, RenderContext};
-use crate::{geometry::Size, result::*};
+use crate::{geometry::Size, graphics, result::*};
 
 /// The `RenderTarget` is used to draw the content of a `RenderContext` on the screen.
 pub struct RenderTarget {
-    size: Size,
     canvas: HtmlCanvasElement,
 }
 
 impl RenderTarget {
     /// Creates a new render target from the given size.
-    pub fn new(size: Size) -> MorphResult<Self> {
+    pub fn new() -> MorphResult<Self> {
         let canvas = utils::canvas("morph_canvas")?;
-        canvas.set_width(size.width());
-        canvas.set_height(size.height());
 
-        let context = canvas
+        Ok(RenderTarget { canvas })
+    }
+
+    /// Draw the given `RenderContext` on the screen.
+    pub fn draw_to_screen(&mut self, render_context: RenderContext) {}
+}
+
+impl graphics::RenderTarget for RenderTarget {
+    fn size(&self) -> Size {
+        Size::new(self.canvas.width(), self.canvas.height())
+    }
+
+    fn set_size(&mut self, size: impl Into<Size>) {
+        let size = size.into();
+        self.canvas.set_width(size.width());
+        self.canvas.set_height(size.height());
+
+        let context = self
+            .canvas
             .get_context("2d")
             .unwrap()
             .unwrap()
@@ -51,10 +66,9 @@ impl RenderTarget {
             .unwrap();
 
         context.stroke();
-
-        Ok(RenderTarget { size, canvas })
     }
 
-    /// Draw the given `RenderContext` on the screen.
-    pub fn draw_to_screen(&mut self, render_context: RenderContext) {}
+    fn context(&self) -> MorphResult<Box<graphics::RenderContext>> {
+        Ok(Box::new(RenderContext::new(self.size())?))
+    }
 }
