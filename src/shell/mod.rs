@@ -2,6 +2,7 @@ pub use self::platform::log;
 
 use crate::{graphics::RenderTarget, platform, result::*, geometry::Size};
 
+/// Creates platform specific shell with a platform specific render target.
 pub fn shell() -> MorphResult<Shell<platform::RenderTarget>> {
     Ok(Shell::new(platform::RenderTarget::new()?))
 }
@@ -16,7 +17,7 @@ pub struct Shell<R: 'static> where R: RenderTarget {
 }
 
 impl<R> Shell<R> where R: RenderTarget {
-    /// Creates a new shell.
+    /// Creates a new shell with a given render target.
     pub fn new(render_target: R) -> Self {
         Shell { is_running: true, render_target }
     }
