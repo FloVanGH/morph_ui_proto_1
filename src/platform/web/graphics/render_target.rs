@@ -4,9 +4,10 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
 use super::{super::utils, RenderContext};
-use crate::{geometry::Size, graphics, result::*};
+use crate::{geometry::*, graphics, result::*};
 
 /// The `RenderTarget` is used to draw the content of a `RenderContext` on the screen.
+#[derive(Clone, Debug, PartialEq)]
 pub struct RenderTarget {
     canvas: web_sys::HtmlCanvasElement,
     context: web_sys::CanvasRenderingContext2d,
@@ -49,7 +50,7 @@ impl graphics::RenderTarget<RenderContext> for RenderTarget {
             .draw_image_with_html_canvas_element(&canvas, 0.0, 0.0)
             .map_err(|_| {
                 MorphError::Backend("RenderTarget::draw_to_screen: could not draw to canvas.")
-            });
+            }); 
         // let render_context = render_context
         //     .into()
         //     .downcast::<RenderContext>()

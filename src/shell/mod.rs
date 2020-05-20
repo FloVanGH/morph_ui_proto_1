@@ -18,7 +18,7 @@ pub fn shell() -> MorphResult<Shell<platform::RenderTarget, platform::RenderCont
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
-pub struct Shell<R: 'static, C>
+pub struct Shell<R: 'static, C: 'static>
 where
     R: RenderTarget<C>,
     C: RenderContext,
@@ -63,7 +63,9 @@ where
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
         if self.render {
-            let render_context = self.render_target.context()?;
+            let mut render_context = self.render_target.context()?;
+            render_context.begin_path();
+            render_context.fill_rect((0, 0), (50, 50));
             self.render_target.draw_to_screen(render_context);
             self.render = false;
         }

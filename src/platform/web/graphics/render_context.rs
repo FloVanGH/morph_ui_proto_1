@@ -4,9 +4,10 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
 use super::super::utils;
-use crate::{geometry::Size, graphics, result::*};
+use crate::{geometry::*, graphics, result::*};
 
 /// The `RenderContext` provides different draw methods.
+#[derive(Clone, Debug, PartialEq)]
 pub struct RenderContext {
     canvas: web_sys::HtmlCanvasElement,
     context: web_sys::CanvasRenderingContext2d,
@@ -28,33 +29,6 @@ impl RenderContext {
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
 
-        context.begin_path();
-
-        use std::f64;
-
-        // Draw the outer circle.
-        context
-            .arc(75.0, 75.0, 50.0, 0.0, f64::consts::PI * 2.0)
-            .unwrap();
-
-        // Draw the mouth.
-        context.move_to(110.0, 75.0);
-        context.arc(75.0, 75.0, 35.0, 0.0, f64::consts::PI).unwrap();
-
-        // Draw the left eye.
-        context.move_to(65.0, 65.0);
-        context
-            .arc(60.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-            .unwrap();
-
-        // Draw the right eye.
-        context.move_to(95.0, 65.0);
-        context
-            .arc(90.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-            .unwrap();
-
-        context.stroke();
-
         Ok(RenderContext { canvas, context })
     }
 
@@ -64,4 +38,82 @@ impl RenderContext {
     }
 }
 
-impl graphics::RenderContext for RenderContext {}
+impl graphics::RenderContext for RenderContext {
+    fn begin_path(&mut self) {
+       self.context.begin_path();
+    }
+
+    fn close_path(&mut self) {
+        self.context.close_path();
+    }
+
+    fn save(&mut self) {
+       self.context.save();
+    }
+
+    fn restore(&mut self) {
+        self.context.restore();
+    }
+
+    fn set_stroke_style(&mut self) {
+        todo!()
+    }
+
+    fn set_fill_style(&mut self) {
+        todo!()
+    }
+
+    fn set_line_width(&mut self) {
+        todo!()
+    }
+    
+    fn move_to(&mut self, position: impl Into<Point>) {
+       let position = position.into();
+       self.context.move_to(position.x() as f64, position.y() as f64);
+    }
+    
+    fn line_to(&mut self, position: impl Into<Point>) {
+        let position = position.into();
+        self.context.line_to(position.x() as f64, position.y() as f64);
+    }
+
+    fn fill_rect(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+        let position = position.into();
+        let size = size.into();
+        self.context.fill_rect(position.x() as f64, position.y() as f64, size.width() as f64, size.height() as f64);
+    }
+
+    fn stroke_rect(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+        let position = position.into();
+        let size = size.into();
+        self.context.fill_rect(position.x() as f64, position.y() as f64, size.width() as f64, size.height() as f64);
+    }
+
+    fn fill_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+        todo!()
+    }
+
+    fn stroke_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+        todo!()
+    }
+
+    fn fill_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+        todo!()
+    }
+
+    fn stroke_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+        todo!()
+    }
+
+    fn draw_image(&mut self) {
+        todo!()
+    }
+
+    fn set_font_size(&mut self, size: u32) {
+        todo!()
+    }
+
+    fn fill_text(&mut self, position: impl Into<Point>, text: &str) {
+        todo!()
+    }
+}
