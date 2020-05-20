@@ -57,9 +57,19 @@ pub fn canvas(id: &str) -> MorphResult<HtmlCanvasElement> {
             "utils::canvas: Could not create canvas.",
         )),
         |c| {
-            c.dyn_into::<HtmlCanvasElement>().map_err(|_| MorphError::Backend(
-                "utils::canvas: Could not convert canvas.",
-            ))
+            c.dyn_into::<HtmlCanvasElement>()
+                .map_err(|_| MorphError::Backend("utils::canvas: Could not convert canvas."))
         },
     )
+}
+
+/// Creates a new canvas
+pub fn create_canvas() -> MorphResult<HtmlCanvasElement> {
+    document()?
+        .create_element("canvas")
+        .map_err(|_| MorphError::Backend(
+            "utils::create_canvas: Could not create canvas.",
+        ))?
+        .dyn_into::<HtmlCanvasElement>()
+        .map_err(|_| MorphError::Backend("utils::create_canvas: Could not convert canvas."))
 }

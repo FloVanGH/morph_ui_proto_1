@@ -1,4 +1,5 @@
+use std::any::Any;
 
-pub trait RenderContext {
+pub trait RenderContext : Any {
 
 }

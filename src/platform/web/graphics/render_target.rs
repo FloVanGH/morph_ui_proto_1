@@ -1,13 +1,15 @@
+use std::any::Any;
+
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::HtmlCanvasElement;
 
 use super::{super::utils, RenderContext};
 use crate::{geometry::Size, graphics, result::*};
 
 /// The `RenderTarget` is used to draw the content of a `RenderContext` on the screen.
 pub struct RenderTarget {
-    canvas: HtmlCanvasElement,
+    canvas: web_sys::HtmlCanvasElement,
+    context: web_sys::CanvasRenderingContext2d,
 }
 
 impl RenderTarget {
@@ -15,11 +17,15 @@ impl RenderTarget {
     pub fn new() -> MorphResult<Self> {
         let canvas = utils::canvas("morph_canvas")?;
 
-        Ok(RenderTarget { canvas })
-    }
+        let context = canvas
+            .get_context("2d")
+            .unwrap()
+            .unwrap()
+            .dyn_into::<web_sys::CanvasRenderingContext2d>()
+            .unwrap();
 
-    /// Draw the given `RenderContext` on the screen.
-    pub fn draw_to_screen(&mut self, render_context: RenderContext) {}
+        Ok(RenderTarget { canvas, context })
+    }
 }
 
 impl graphics::RenderTarget for RenderTarget {
@@ -68,7 +74,16 @@ impl graphics::RenderTarget for RenderTarget {
         context.stroke();
     }
 
-    fn context(&self) -> MorphResult<Box<graphics::RenderContext>> {
+    fn context(&self) -> MorphResult<Box<dyn graphics::RenderContext>> {
         Ok(Box::new(RenderContext::new(self.size())?))
+    }
+
+    fn draw_to_screen(&mut self, render_context: impl Into<Box<dyn Any>>) {
+        let render_context = render_context
+            .into()
+            .downcast::<RenderContext>()
+            .map_err(|_| {
+                MorphError::Backend("RenderTarget::draw_to_screen: Could downcast render context.")
+            })?;
     }
 }

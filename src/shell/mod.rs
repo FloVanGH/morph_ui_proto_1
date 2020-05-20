@@ -13,13 +13,14 @@ pub fn shell() -> MorphResult<Shell<platform::RenderTarget>> {
 /// set of backend e.g. for WebAssembly and cortex-m processors.
 pub struct Shell<R: 'static> where R: RenderTarget {
     is_running: bool,
+    render: bool,
     render_target: R,
 }
 
 impl<R> Shell<R> where R: RenderTarget {
     /// Creates a new shell with a given render target.
     pub fn new(render_target: R) -> Self {
-        Shell { is_running: true, render_target }
+        Shell { is_running: true, render_target, render: true }
     }
 }
 
@@ -36,6 +37,11 @@ impl<R> Shell<R> where R: RenderTarget {
 
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
+        if self.render {
+            let render_context = self.render_target.context()?;
+            self.render_target.draw_to_screen(render_context);
+            self.render = false;
+        }
         Ok(())
     }
 

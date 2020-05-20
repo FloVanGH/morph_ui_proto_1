@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use crate::{geometry::Size, result::*};
 
 use super::RenderContext;
@@ -11,4 +13,7 @@ pub trait RenderTarget {
 
     /// Creates an get the render context.
     fn context(&self) -> MorphResult<Box<RenderContext>>;
+
+    /// Draw the given `RenderContext` on the screen.
+    fn draw_to_screen(&mut self, render_context: impl Into<Box<Any>>);
 }
