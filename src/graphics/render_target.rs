@@ -4,7 +4,7 @@ use crate::{geometry::Size, result::*};
 
 use super::RenderContext;
 
-pub trait RenderTarget {
+pub trait RenderTarget<C> where C: RenderContext {
      /// Gets the size of the render target on the screen.
     fn size(&self) -> Size;
 
@@ -12,8 +12,8 @@ pub trait RenderTarget {
     fn set_size(&mut self, size: impl Into<Size>);
 
     /// Creates an get the render context.
-    fn context(&self) -> MorphResult<Box<RenderContext>>;
+    fn context(&self) -> MorphResult<C>;
 
     /// Draw the given `RenderContext` on the screen.
-    fn draw_to_screen(&mut self, render_context: impl Into<Box<Any>>);
+    fn draw_to_screen(&mut self, render_context: C);
 }

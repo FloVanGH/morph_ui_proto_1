@@ -28,7 +28,7 @@ impl RenderTarget {
     }
 }
 
-impl graphics::RenderTarget for RenderTarget {
+impl graphics::RenderTarget<RenderContext> for RenderTarget {
     fn size(&self) -> Size {
         Size::new(self.canvas.width(), self.canvas.height())
     }
@@ -37,53 +37,24 @@ impl graphics::RenderTarget for RenderTarget {
         let size = size.into();
         self.canvas.set_width(size.width());
         self.canvas.set_height(size.height());
-
-        let context = self
-            .canvas
-            .get_context("2d")
-            .unwrap()
-            .unwrap()
-            .dyn_into::<web_sys::CanvasRenderingContext2d>()
-            .unwrap();
-
-        context.begin_path();
-
-        use std::f64;
-
-        // Draw the outer circle.
-        context
-            .arc(75.0, 75.0, 50.0, 0.0, f64::consts::PI * 2.0)
-            .unwrap();
-
-        // Draw the mouth.
-        context.move_to(110.0, 75.0);
-        context.arc(75.0, 75.0, 35.0, 0.0, f64::consts::PI).unwrap();
-
-        // Draw the left eye.
-        context.move_to(65.0, 65.0);
-        context
-            .arc(60.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-            .unwrap();
-
-        // Draw the right eye.
-        context.move_to(95.0, 65.0);
-        context
-            .arc(90.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-            .unwrap();
-
-        context.stroke();
     }
 
-    fn context(&self) -> MorphResult<Box<dyn graphics::RenderContext>> {
-        Ok(Box::new(RenderContext::new(self.size())?))
+    fn context(&self) -> MorphResult<RenderContext> {
+        RenderContext::new(self.size())
     }
 
-    fn draw_to_screen(&mut self, render_context: impl Into<Box<dyn Any>>) {
-        let render_context = render_context
-            .into()
-            .downcast::<RenderContext>()
+    fn draw_to_screen(&mut self, render_context: RenderContext) {
+        let canvas = render_context.canvas();
+        self.context
+            .draw_image_with_html_canvas_element(&canvas, 0.0, 0.0)
             .map_err(|_| {
-                MorphError::Backend("RenderTarget::draw_to_screen: Could downcast render context.")
-            })?;
+                MorphError::Backend("RenderTarget::draw_to_screen: could not draw to canvas.")
+            });
+        // let render_context = render_context
+        //     .into()
+        //     .downcast::<RenderContext>()
+        //     .map_err(|_| {
+        //         MorphError::Backend("RenderTarget::draw_to_screen: Could downcast render context.")
+        //     })?;
     }
 }

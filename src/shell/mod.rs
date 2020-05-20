@@ -1,9 +1,16 @@
 pub use self::platform::log;
 
-use crate::{graphics::RenderTarget, platform, result::*, geometry::Size};
+use core::marker::PhantomData;
+
+use crate::{
+    geometry::Size,
+    graphics::{RenderContext, RenderTarget},
+    platform,
+    result::*,
+};
 
 /// Creates platform specific shell with a platform specific render target.
-pub fn shell() -> MorphResult<Shell<platform::RenderTarget>> {
+pub fn shell() -> MorphResult<Shell<platform::RenderTarget, platform::RenderContext>> {
     Ok(Shell::new(platform::RenderTarget::new()?))
 }
 
@@ -11,20 +18,38 @@ pub fn shell() -> MorphResult<Shell<platform::RenderTarget>> {
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
-pub struct Shell<R: 'static> where R: RenderTarget {
+pub struct Shell<R: 'static, C>
+where
+    R: RenderTarget<C>,
+    C: RenderContext,
+{
     is_running: bool,
     render: bool,
     render_target: R,
+    _phantom: PhantomData<C>
 }
 
-impl<R> Shell<R> where R: RenderTarget {
+impl<R, C> Shell<R, C>
+where
+    R: RenderTarget<C>,
+    C: RenderContext,
+{
     /// Creates a new shell with a given render target.
     pub fn new(render_target: R) -> Self {
-        Shell { is_running: true, render_target, render: true }
+        Shell {
+            is_running: true,
+            render_target,
+            render: true,
+            _phantom: PhantomData::default()
+        }
     }
 }
 
-impl<R> Shell<R> where R: RenderTarget {
+impl<R, C> Shell<R, C>
+where
+    R: RenderTarget<C>,
+    C: RenderContext,
+{
     // Drain events.
     fn drain_events(&mut self) -> MorphResult<()> {
         Ok(())
@@ -52,7 +77,7 @@ impl<R> Shell<R> where R: RenderTarget {
     }
 
     /// Start and run the shell.
-    pub fn start(mut self)  -> MorphResult<()> {
+    pub fn start(mut self) -> MorphResult<()> {
         log("Start");
 
         platform::main_loop(move |running| {
