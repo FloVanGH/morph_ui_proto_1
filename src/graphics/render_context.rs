@@ -21,7 +21,7 @@ pub trait RenderContext {
     fn set_fill_style(&mut self);
 
     /// Sets the thickness of lines.
-    fn set_line_width(&mut self);
+    fn set_line_width(&mut self, width: u32);
 
     /// Begins a new sub-path at the position specified by the given {x, y} coordinates.
     fn move_to(&mut self, position: impl Into<Point>);

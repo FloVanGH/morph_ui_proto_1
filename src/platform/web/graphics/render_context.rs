@@ -40,7 +40,7 @@ impl RenderContext {
 
 impl graphics::RenderContext for RenderContext {
     fn begin_path(&mut self) {
-       self.context.begin_path();
+        self.context.begin_path();
     }
 
     fn close_path(&mut self) {
@@ -48,7 +48,7 @@ impl graphics::RenderContext for RenderContext {
     }
 
     fn save(&mut self) {
-       self.context.save();
+        self.context.save();
     }
 
     fn restore(&mut self) {
@@ -63,30 +63,42 @@ impl graphics::RenderContext for RenderContext {
         todo!()
     }
 
-    fn set_line_width(&mut self) {
-        todo!()
+    fn set_line_width(&mut self, width: u32) {
+        self.context.set_line_width(width as f64);
     }
-    
+
     fn move_to(&mut self, position: impl Into<Point>) {
-       let position = position.into();
-       self.context.move_to(position.x() as f64, position.y() as f64);
+        let position = position.into();
+        self.context
+            .move_to(position.x() as f64, position.y() as f64);
     }
-    
+
     fn line_to(&mut self, position: impl Into<Point>) {
         let position = position.into();
-        self.context.line_to(position.x() as f64, position.y() as f64);
+        self.context
+            .line_to(position.x() as f64, position.y() as f64);
     }
 
     fn fill_rect(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
         let position = position.into();
         let size = size.into();
-        self.context.fill_rect(position.x() as f64, position.y() as f64, size.width() as f64, size.height() as f64);
+        self.context.fill_rect(
+            position.x() as f64,
+            position.y() as f64,
+            size.width() as f64,
+            size.height() as f64,
+        );
     }
 
     fn stroke_rect(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
         let position = position.into();
         let size = size.into();
-        self.context.fill_rect(position.x() as f64, position.y() as f64, size.width() as f64, size.height() as f64);
+        self.context.fill_rect(
+            position.x() as f64,
+            position.y() as f64,
+            size.width() as f64,
+            size.height() as f64,
+        );
     }
 
     fn fill_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
