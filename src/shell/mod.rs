@@ -65,7 +65,12 @@ where
         if self.render {
             let mut render_context = self.render_target.context()?;
             render_context.begin_path();
+            render_context.set_fill_style("#8d03e2");
             render_context.fill_rect((0, 0), (50, 50));
+            render_context.move_to((10, 10));
+            render_context.line_to((100, 100));
+            render_context.set_stroke_style("##0040ff");
+            render_context.stroke();
             self.render_target.draw_to_screen(render_context);
             self.render = false;
         }

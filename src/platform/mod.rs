@@ -4,7 +4,7 @@ pub use self::platform::*;
 #[path = "cortex_m/mod.rs"]
 mod platform;
 
-#[cfg(all(not(target_arch), not(target_arch = "arm")))]
+#[cfg(all(not(target_arch = "wasm32"), not(target_arch = "arm")))]
 #[path = "desktop/mod.rs"]
 mod platform;
 

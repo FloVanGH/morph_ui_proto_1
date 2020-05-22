@@ -53,12 +53,12 @@ impl graphics::RenderContext for RenderContext {
         self.context.restore();
     }
 
-    fn set_stroke_style(&mut self) {
-        todo!()
+    fn set_stroke_style(&mut self, brush: impl Into<graphics::Brush>) {
+        self.context.set_stroke_style(&brush_to_js_value(brush.into()));
     }
 
-    fn set_fill_style(&mut self) {
-        todo!()
+    fn set_fill_style(&mut self, brush: impl Into<graphics::Brush>) {
+        self.context.set_fill_style(&brush_to_js_value(brush.into()));
     }
 
     fn set_line_width(&mut self, width: u32) {
@@ -91,7 +91,7 @@ impl graphics::RenderContext for RenderContext {
     fn stroke_rect(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
         let position = position.into();
         let size = size.into();
-        self.context.fill_rect(
+        self.context.stroke_rect(
             position.x() as f64,
             position.y() as f64,
             size.width() as f64,
@@ -126,4 +126,26 @@ impl graphics::RenderContext for RenderContext {
     fn fill_text(&mut self, position: impl Into<Point>, text: &str) {
         todo!()
     }
+
+    fn fill(&mut self) {
+        self.context.fill();
+    }
+    
+    fn stroke(&mut self) {
+        self.context.stroke();
+    }  
+}
+
+fn brush_to_js_value(brush: graphics::Brush) -> JsValue {
+    let color = {
+        match brush {
+            graphics::Brush::Color(color) => color,
+        }
+    };
+
+    let mut color = format!("#{:x}", color.data);
+    color.remove(1);
+    color.remove(1);
+
+    JsValue::from_str(color.as_str())
 }

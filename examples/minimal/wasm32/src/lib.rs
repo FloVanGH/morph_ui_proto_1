@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 
-#[path = "../../../minimal.rs"]
+#[path = "../../minimal.rs"]
 mod minimal;
 
 #[wasm_bindgen(start)]

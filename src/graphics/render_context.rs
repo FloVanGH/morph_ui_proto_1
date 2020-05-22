@@ -1,5 +1,7 @@
 use crate::geometry::*;
 
+use super::Brush;
+
 /// The `RenderContext` provides different draw methods.
 pub trait RenderContext {
     /// Starts a new path by emptying the list of sub-paths. Call this when you want to create a new path.
@@ -15,10 +17,10 @@ pub trait RenderContext {
     fn restore(&mut self);
 
     /// Specifies the fill stroke to use inside shapes.
-    fn set_stroke_style(&mut self);
+    fn set_stroke_style(&mut self, brush: impl Into<Brush>);
 
     /// Specifies the fill color to use inside shapes.
-    fn set_fill_style(&mut self);
+    fn set_fill_style(&mut self, brush: impl Into<Brush>);
 
     /// Sets the thickness of lines.
     fn set_line_width(&mut self, width: u32);
@@ -55,4 +57,10 @@ pub trait RenderContext {
 
     /// Draws (fills) a given text at the given (x, y) position.
     fn fill_text(&mut self, position: impl Into<Point>, text: &str);
+
+     /// Fills the current or given path with the current file style.
+     fn fill(&mut self);
+
+    /// Strokes {outlines} the current or given path with the current stroke style.
+    fn stroke(&mut self);
 }

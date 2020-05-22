@@ -10,8 +10,6 @@ pub struct RenderTarget {
 impl RenderTarget {
     /// Creates a new render target from the given size.
     pub fn new() -> MorphResult<Self> {
-       
-
         Ok(RenderTarget {  })
     }
 }
