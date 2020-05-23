@@ -34,6 +34,22 @@ impl RenderContext {
     pub fn canvas(self) -> web_sys::HtmlCanvasElement {
         self.canvas
     }
+
+    fn circle(&mut self, center: impl Into<Point>, radius: u32) {
+        let center = center.into();
+        self.context.arc(center.x() as f64, center.y() as f64, radius as f64, 0.0, 2.0 * std::f64::consts::PI);
+    }
+
+    fn triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
+        let position_one = position_one.into();
+        let position_two = position_two.into();
+        let position_three = position_three.into();
+
+        self.context.move_to(position_one.x() as f64, position_one.y() as f64);
+        self.context.line_to(position_two.x() as f64, position_two.y() as f64);
+        self.context.line_to(position_three.x() as f64, position_three.y() as f64);
+        self.context.line_to(position_one.x() as f64, position_one.y() as f64);
+    }
 }
 
 impl graphics::RenderContext for RenderContext {
@@ -99,20 +115,32 @@ impl graphics::RenderContext for RenderContext {
         );
     }
 
-    fn fill_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
-        todo!()
+    fn fill_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
+        self.begin_path();
+        self.triangle(position_one, position_two, position_three);
+        self.fill();
+        self.close_path();
     }
 
-    fn stroke_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
-        todo!()
+    fn stroke_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
+        self.begin_path();
+        self.triangle(position_one, position_two, position_three);
+        self.stroke();
+        self.close_path();
     }
 
-    fn fill_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
-        todo!()
+    fn fill_circle(&mut self, center: impl Into<Point>, radius: u32) {
+        self.begin_path();
+        self.circle(center, radius);
+        self.fill();
+        self.close_path();
     }
 
-    fn stroke_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
-        todo!()
+    fn stroke_circle(&mut self, center: impl Into<Point>, radius: u32) {
+        self.begin_path();
+        self.circle(center, radius);
+        self.stroke();
+        self.close_path();
     }
 
     fn draw_image(&mut self) {
@@ -130,7 +158,7 @@ impl graphics::RenderContext for RenderContext {
     fn fill(&mut self) {
         self.context.fill();
     }
-    
+
     fn stroke(&mut self) {
         self.context.stroke();
     }  

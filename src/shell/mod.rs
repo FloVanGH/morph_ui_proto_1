@@ -71,6 +71,14 @@ where
             render_context.line_to((100, 100));
             render_context.set_stroke_style("##0040ff");
             render_context.stroke();
+            render_context.set_fill_style("#ff0000");
+            render_context.fill_circle((30, 30), 20);
+            render_context.set_stroke_style("##00ff00");
+            render_context.stroke_circle((15, 15), 10);
+            render_context.set_stroke_style("#0000ff");
+            render_context.stroke_triangle((10, 10), (20, 20), (0, 20));
+            render_context.set_fill_style("#40ff00");
+            render_context.fill_triangle((10, 30), (60, 60), (10, 60));
             self.render_target.draw_to_screen(render_context);
             self.render = false;
         }

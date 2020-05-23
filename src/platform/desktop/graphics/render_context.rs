@@ -50,19 +50,19 @@ impl graphics::RenderContext for RenderContext {
         todo!()
     }
 
-    fn fill_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+    fn fill_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
         todo!()
     }
     
-    fn stroke_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+    fn stroke_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
         todo!()
     }
 
-    fn fill_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+    fn fill_circle(&mut self, center: impl Into<Point>, radius: u32) {
         todo!()
     }
 
-    fn stroke_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>) {
+    fn stroke_circle(&mut self, center: impl Into<Point>, radius: u32) {
         todo!()
     }
 

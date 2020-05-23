@@ -38,16 +38,16 @@ pub trait RenderContext {
     fn stroke_rect(&mut self, position: impl Into<Point>, size: impl Into<Size>);
 
     /// Draws a triangle that is filled according to the current fill_style
-    fn fill_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>);
+    fn fill_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>);
 
     /// Draws a triangle that is stroked (outlined) according to the current stroke_style;
-    fn stroke_triangle(&mut self, position: impl Into<Point>, size: impl Into<Size>);
+    fn stroke_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>);
 
     /// Draws a circle that is filled according to the current fill_style
-    fn fill_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>);
+    fn fill_circle(&mut self, center: impl Into<Point>, radius: u32);
 
     /// Draws a circle that is stroked (outlined) according to the current stroke_style;
-    fn stroke_circle(&mut self, position: impl Into<Point>, size: impl Into<Size>);
+    fn stroke_circle(&mut self, center: impl Into<Point>, radius: u32);
 
     /// Draws an image.
     fn draw_image(&mut self);
