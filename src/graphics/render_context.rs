@@ -1,6 +1,6 @@
 use crate::geometry::*;
 
-use super::Brush;
+use super::{Brush, Image};
 
 /// The `RenderContext` provides different draw methods.
 pub trait RenderContext {
@@ -49,8 +49,11 @@ pub trait RenderContext {
     /// Draws a circle that is stroked (outlined) according to the current stroke_style;
     fn stroke_circle(&mut self, center: impl Into<Point>, radius: u32);
 
-    /// Draws an image.
-    fn draw_image(&mut self);
+    /// Draws an image to the given position.
+    fn draw_image(&mut self, position: impl Into<Point>, image: impl Into<Image>);
+
+    /// Draws an other render context to this context.
+    fn draw_context(&mut self, position: impl Into<Point>, other: Self);
 
     /// Specifies the font size.
     fn set_font_size(&mut self, size: u32);

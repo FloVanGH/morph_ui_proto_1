@@ -51,11 +51,5 @@ impl graphics::RenderTarget<RenderContext> for RenderTarget {
             .map_err(|_| {
                 MorphError::Backend("RenderTarget::draw_to_screen: could not draw to canvas.")
             }); 
-        // let render_context = render_context
-        //     .into()
-        //     .downcast::<RenderContext>()
-        //     .map_err(|_| {
-        //         MorphError::Backend("RenderTarget::draw_to_screen: Could downcast render context.")
-        //     })?;
     }
 }

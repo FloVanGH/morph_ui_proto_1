@@ -37,18 +37,33 @@ impl RenderContext {
 
     fn circle(&mut self, center: impl Into<Point>, radius: u32) {
         let center = center.into();
-        self.context.arc(center.x() as f64, center.y() as f64, radius as f64, 0.0, 2.0 * std::f64::consts::PI);
+        self.context.arc(
+            center.x() as f64,
+            center.y() as f64,
+            radius as f64,
+            0.0,
+            2.0 * std::f64::consts::PI,
+        );
     }
 
-    fn triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
+    fn triangle(
+        &mut self,
+        position_one: impl Into<Point>,
+        position_two: impl Into<Point>,
+        position_three: impl Into<Point>,
+    ) {
         let position_one = position_one.into();
         let position_two = position_two.into();
         let position_three = position_three.into();
 
-        self.context.move_to(position_one.x() as f64, position_one.y() as f64);
-        self.context.line_to(position_two.x() as f64, position_two.y() as f64);
-        self.context.line_to(position_three.x() as f64, position_three.y() as f64);
-        self.context.line_to(position_one.x() as f64, position_one.y() as f64);
+        self.context
+            .move_to(position_one.x() as f64, position_one.y() as f64);
+        self.context
+            .line_to(position_two.x() as f64, position_two.y() as f64);
+        self.context
+            .line_to(position_three.x() as f64, position_three.y() as f64);
+        self.context
+            .line_to(position_one.x() as f64, position_one.y() as f64);
     }
 }
 
@@ -70,11 +85,13 @@ impl graphics::RenderContext for RenderContext {
     }
 
     fn set_stroke_style(&mut self, brush: impl Into<graphics::Brush>) {
-        self.context.set_stroke_style(&brush_to_js_value(brush.into()));
+        self.context
+            .set_stroke_style(&brush_to_js_value(brush.into()));
     }
 
     fn set_fill_style(&mut self, brush: impl Into<graphics::Brush>) {
-        self.context.set_fill_style(&brush_to_js_value(brush.into()));
+        self.context
+            .set_fill_style(&brush_to_js_value(brush.into()));
     }
 
     fn set_line_width(&mut self, width: u32) {
@@ -115,14 +132,24 @@ impl graphics::RenderContext for RenderContext {
         );
     }
 
-    fn fill_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
+    fn fill_triangle(
+        &mut self,
+        position_one: impl Into<Point>,
+        position_two: impl Into<Point>,
+        position_three: impl Into<Point>,
+    ) {
         self.begin_path();
         self.triangle(position_one, position_two, position_three);
         self.fill();
         self.close_path();
     }
 
-    fn stroke_triangle(&mut self, position_one: impl Into<Point>,  position_two: impl Into<Point>, position_three: impl Into<Point>) {
+    fn stroke_triangle(
+        &mut self,
+        position_one: impl Into<Point>,
+        position_two: impl Into<Point>,
+        position_three: impl Into<Point>,
+    ) {
         self.begin_path();
         self.triangle(position_one, position_two, position_three);
         self.stroke();
@@ -143,8 +170,16 @@ impl graphics::RenderContext for RenderContext {
         self.close_path();
     }
 
-    fn draw_image(&mut self) {
+    fn draw_image(&mut self, position: impl Into<Point>, image: impl Into<graphics::Image>) {
         todo!()
+    }
+
+    fn draw_context(&mut self, position: impl Into<Point>, other: Self) {
+        let position = position.into();
+        let canvas = other.canvas();
+        self.context
+            .draw_image_with_html_canvas_element(&canvas, position.x() as f64, position.y() as f64)
+            .expect("RenderContext.draw_context: Could not draw to canvas.")
     }
 
     fn set_font_size(&mut self, size: u32) {
@@ -161,7 +196,7 @@ impl graphics::RenderContext for RenderContext {
 
     fn stroke(&mut self) {
         self.context.stroke();
-    }  
+    }
 }
 
 fn brush_to_js_value(brush: graphics::Brush) -> JsValue {

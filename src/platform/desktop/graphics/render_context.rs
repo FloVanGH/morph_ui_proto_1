@@ -66,8 +66,12 @@ impl graphics::RenderContext for RenderContext {
         todo!()
     }
 
-    fn draw_image(&mut self) {
+    fn draw_image(&mut self, position: impl Into<Point>, image: impl Into<graphics::Image>) {
         todo!()
+    }
+
+    fn draw_context(&mut self, position: impl Into<Point>, other: Self) {
+
     }
 
     fn set_font_size(&mut self, size: u32) {

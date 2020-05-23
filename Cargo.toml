@@ -20,6 +20,7 @@ test = false
 
 [dependencies]
 derive_more = "0.99.7"
+heapless = "0.5.5"
 
 [target.thumbv7m-none-eabi.dependencies]
 embedded-hal = "0.2.3"
