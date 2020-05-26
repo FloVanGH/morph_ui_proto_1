@@ -7,7 +7,7 @@ use st7735::fonts::font57::Font57;
 use st7735::Orientation;
 use st7735::ST7734;
 
-#[path = "../../../minimal.rs"]
+#[path = "../../minimal.rs"]
 mod minimal;
 
 fn main() {

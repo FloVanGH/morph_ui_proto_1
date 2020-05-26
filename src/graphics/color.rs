@@ -39,18 +39,18 @@ impl Color {
         ((self.data & 0xFF00_0000) >> 24) as u8
     }
 
-    /// Interpolate between two colors
-    pub fn interpolate(start_color: Color, end_color: Color, scale: f64) -> Color {
-        let r = Color::interp(start_color.r(), end_color.r(), scale);
-        let g = Color::interp(start_color.g(), end_color.g(), scale);
-        let b = Color::interp(start_color.b(), end_color.b(), scale);
-        let a = Color::interp(start_color.a(), end_color.a(), scale);
-        Color::rgba(r, g, b, a)
-    }
+    // /// Interpolate between two colors
+    // pub fn interpolate(start_color: Color, end_color: Color, scale: f64) -> Color {
+    //     let r = Color::interp(start_color.r(), end_color.r(), scale);
+    //     let g = Color::interp(start_color.g(), end_color.g(), scale);
+    //     let b = Color::interp(start_color.b(), end_color.b(), scale);
+    //     let a = Color::interp(start_color.a(), end_color.a(), scale);
+    //     Color::rgba(r, g, b, a)
+    // }
 
-    fn interp(start_color: u8, end_color: u8, scale: f64) -> u8 {
-        (end_color as f64 - start_color as f64).mul_add(scale, start_color as f64) as u8
-    }
+    // fn interp(start_color: u8, end_color: u8, scale: f64) -> u8 {
+    //     (end_color as f64 - start_color as f64).mul_add(scale, start_color as f64) as u8
+    // }
 }
 
 impl From<&str> for Color {

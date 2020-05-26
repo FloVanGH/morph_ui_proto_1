@@ -1,12 +1,11 @@
 #![no_std]
 #![no_main]
 
-#[path = "../../../minimal.rs"]
+#[path = "../../minimal.rs"]
 mod minimal;
 
 use panic_halt as _;
 
-use embedded_graphics::image::Image16BPP;
 use embedded_graphics::prelude::*;
 use embedded_graphics::primitives::rectangle::Rectangle;
 
