@@ -1,6 +1,8 @@
 
-use tinybmp::Bmp;
+use tinybmp::{Bmp, BmpIterator};
 use crate::{geometry::*, result::*};
+
+use super::Color;
 
 /// Represents an image object.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -9,12 +11,10 @@ pub struct Image<'a> {
 }
 
 impl<'a> Image<'a> {
-    /// Creates a new image object from a byte array. 
-    pub fn new(data: &'a [u8]) -> MorphResult<Self> {
-        let data = Bmp::from_slice(data).map_err(|_| MorphError::Create("Image::data: Could not create image."))?;
-
+    /// Creates a new image from a bmp image.
+    pub fn from_bmp(bmp: Bmp<'a>) -> MorphResult<Self> {
         Ok(Image {
-            data
+            data: bmp
         })
     }
 
@@ -30,5 +30,33 @@ impl<'a> Image<'a> {
 
     pub fn data(&self) -> &Bmp<'a> {
         &self.data
+    }
+}
+
+impl<'a> IntoIterator for &'a Image<'a> {
+    type Item = Color;
+    type IntoIter = ImageIterator<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        ImageIterator {
+            iterator: self.data.into_iter()
+        }
+    }
+}
+
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+pub struct ImageIterator<'a> {
+    iterator: BmpIterator<'a>
+}
+
+impl<'a> Iterator for ImageIterator<'a> {
+    type Item = Color;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(pixel) = self.iterator.next() {
+            return Some(Color { data: pixel.color} );
+        }
+
+        None
     }
 }

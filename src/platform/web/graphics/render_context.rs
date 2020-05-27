@@ -173,11 +173,11 @@ impl graphics::RenderContext for RenderContext {
     fn draw_image(&mut self, position: impl Into<Point>, image: &graphics::Image) {
         let position = position.into();
         let mut pixels = vec![];
-        for pixel in image.data() {
-            pixels.push(((pixel.color & 0x00FF_0000) >> 16) as u8);
-            pixels.push(((pixel.color & 0x0000_FF00) >> 8) as u8);
-            pixels.push((pixel.color & 0x0000_00FF) as u8);
-            pixels.push(((pixel.color & 0xFF00_0000) >> 24) as u8);
+        for color in image {
+            pixels.push(color.r());
+            pixels.push(color.g());
+            pixels.push(color.b());
+            pixels.push(color.a());
         }
 
         let data =

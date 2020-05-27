@@ -2,6 +2,8 @@ pub use self::platform::log;
 
 use core::marker::PhantomData;
 
+use tinybmp::Bmp;
+
 use crate::{
     geometry::Size,
     graphics::{RenderContext, RenderTarget, Image},
@@ -63,8 +65,7 @@ where
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
         if self.render {
-            
-            let image = Image::new(include_bytes!("../../data/cloud_avatar2.bmp")).unwrap();
+            let image = Image::from_bmp(Bmp::from_slice(include_bytes!("../../data/cloud_avatar2.bmp")).map_err(|_| MorphError::Create("Image::data: Could not create image."))?).unwrap();
             let mut render_context = self.render_target.context()?;
             render_context.begin_path();
             render_context.set_fill_style("#8d03e2");

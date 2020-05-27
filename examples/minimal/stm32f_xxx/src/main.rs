@@ -6,12 +6,6 @@ mod minimal;
 
 use panic_halt as _;
 
-use embedded_graphics::prelude::*;
-use embedded_graphics::primitives::rectangle::Rectangle;
-
-use st7735_lcd;
-use st7735_lcd::Orientation;
-
 use stm32f1xx_hal::{
     pac,
     prelude::*,
