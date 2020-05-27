@@ -21,6 +21,7 @@ test = false
 [dependencies]
 derive_more = "0.99.7"
 heapless = "0.5.5"
+tinybmp = "0.2.3"
 
 [target.thumbv7m-none-eabi.dependencies]
 embedded-hal = "0.2.3"
@@ -38,6 +39,8 @@ stm32f1xx-hal = { version = "0.5.3", features = ["rt", "stm32f103", "medium"] }
 wasm-bindgen = "0.2"
 console_error_panic_hook = { version = "0.1.6", optional = true }
 wee_alloc = { version = "0.4.5", optional = true }
+wasm-bindgen-futures = "0.4.12"
+js-sys = "0.3.39"
 [target.wasm32-unknown-unknown.dependencies.web-sys]
     version = "0.3.39"
     features = [
@@ -47,6 +50,7 @@ wee_alloc = { version = "0.4.5", optional = true }
         'CanvasRenderingContext2d',
         'Document',
         'Element',
+        'ImageData',
         'HtmlCanvasElement',
         'HtmlElement',
         'Window',

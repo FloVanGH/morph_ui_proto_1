@@ -1,5 +1,5 @@
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
+use wasm_bindgen::{JsCast, Clamped};
 
 use super::super::utils;
 use crate::{geometry::*, graphics, result::*};
@@ -170,8 +170,21 @@ impl graphics::RenderContext for RenderContext {
         self.close_path();
     }
 
-    fn draw_image<'a>(&mut self, position: impl Into<Point>, image: impl Into<graphics::Image<'a>>) {
-        todo!()
+    fn draw_image(&mut self, position: impl Into<Point>, image: &graphics::Image) {
+     let position = position.into();
+        let mut pixels = vec![];
+        for pixel in image.data() {
+            pixels.push( ((pixel.color & 0x00FF_0000) >> 16) as u8);
+            pixels.push( ((pixel.color & 0x0000_FF00) >> 8) as u8);
+            pixels.push( (pixel.color & 0x0000_00FF) as u8);
+            pixels.push(  ((pixel.color & 0xFF00_0000) >> 24) as u8); 
+        }
+       
+        // let mut vec = vec![];
+        // vec.extend_from_slice(image.data().image_data());
+
+        let data = web_sys::ImageData::new_with_u8_clamped_array(Clamped(&mut pixels), image.width()).expect("RenderContext.draw_image: Could not create image data.");
+        self.context.put_image_data(&data, position.x() as f64, position.y() as f64);
     }
 
     fn draw_context(&mut self, position: impl Into<Point>, other: Self) {
@@ -179,7 +192,7 @@ impl graphics::RenderContext for RenderContext {
         let canvas = other.canvas();
         self.context
             .draw_image_with_html_canvas_element(&canvas, position.x() as f64, position.y() as f64)
-            .expect("RenderContext.draw_context: Could not draw to canvas.")
+            .expect("RenderContext.draw_context: Could not draw to canvas.");
     }
 
     fn set_font_size(&mut self, size: u32) {

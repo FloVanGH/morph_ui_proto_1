@@ -4,7 +4,7 @@ use core::marker::PhantomData;
 
 use crate::{
     geometry::Size,
-    graphics::{RenderContext, RenderTarget},
+    graphics::{RenderContext, RenderTarget, Image},
     platform,
     result::*,
 };
@@ -63,6 +63,8 @@ where
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
         if self.render {
+            
+            let image = Image::new(include_bytes!("../../data/cloud_avatar2.bmp")).unwrap();
             let mut render_context = self.render_target.context()?;
             render_context.begin_path();
             render_context.set_fill_style("#8d03e2");
@@ -79,6 +81,7 @@ where
             render_context.stroke_triangle((10, 10), (20, 20), (0, 20));
             render_context.set_fill_style("#40ff00");
             render_context.fill_triangle((10, 30), (60, 60), (10, 60));
+            render_context.draw_image((20, 20), &image);
             self.render_target.draw_to_screen(render_context);
             self.render = false;
         }
