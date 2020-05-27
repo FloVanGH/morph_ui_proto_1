@@ -4,11 +4,11 @@ use core::marker::PhantomData;
 
 use tinybmp::Bmp;
 
-use embedded_graphics::pixelcolor::PixelColor;
 
 use crate::{
     geometry::Size,
-    graphics::{DrawTarget, Image, RenderContext, RenderTarget},
+    embedded_graphics::{DrawTarget, pixelcolor::PixelColor},
+    graphics::{Image, RenderContext, RenderTarget},
     platform,
     result::*,
 };

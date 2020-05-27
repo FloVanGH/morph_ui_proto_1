@@ -32,7 +32,6 @@ cortex-m-rt = "0.6.12"
 # alloc-cortex-m = "0.3.5"
 cortex-m-semihosting = "0.3.5"
 panic-halt = "0.2.0"
-st7735-lcd = { version = "0.7.1", features = ["graphics"] }
 stm32f1xx-hal = { version = "0.5.3", features = ["rt", "stm32f103", "medium"] }
 
 [target.wasm32-unknown-unknown.dependencies]

@@ -1,6 +1,6 @@
 pub use crate::{
     shell::*,
     result::*,
-    graphics::{DrawTarget, PixelColor},
+    embedded_graphics::prelude::*,
     embedded_graphics
 };

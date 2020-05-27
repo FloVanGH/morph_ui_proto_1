@@ -5,12 +5,12 @@ authors = ["Florian Blasius <flovanpt@posteo.de>"]
 edition = "2018"
 
 [dependencies]
-cortex-m = "0.6.2"
-cortex-m-rt = "0.6.12"
-cortex-m-semihosting = "0.3.5"
-panic-halt = "0.2.0"
-stm32f1xx-hal = { version = "0.5.3", features = ["rt", "stm32f103", "medium"] }
+stm32f1xx-hal = { version = "0.5", features = ["rt", "stm32f103", "medium" ] } 
+panic-semihosting = "0.5"
+st7735-lcd = "0.7"
 morph = { path = "../../../", default_features = false }
+cortex-m = "0.6"
+cortex-m-rt = "0.6"
 
 [profile.release]
 opt-level = "z"

@@ -1,5 +1,4 @@
-pub use embedded_graphics::{DrawTarget, pixelcolor::PixelColor};
-
+#[cfg(target_arch = "wasm32")]
 pub use crate::platform::graphics::*;
 
 pub use self::brush::*;
