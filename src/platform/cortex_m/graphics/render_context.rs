@@ -66,7 +66,7 @@ impl graphics::RenderContext for RenderContext {
         todo!()
     }
 
-    fn draw_image(&mut self, position: impl Into<Point>, image: impl Into<graphics::Image>) {
+    fn draw_image<'a>(&mut self, position: impl Into<Point>, image: impl Into<graphics::Image<'a>>) {
         todo!()
     }
 

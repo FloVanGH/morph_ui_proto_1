@@ -50,7 +50,7 @@ pub trait RenderContext {
     fn stroke_circle(&mut self, center: impl Into<Point>, radius: u32);
 
     /// Draws an image to the given position.
-    fn draw_image(&mut self, position: impl Into<Point>, image: impl Into<Image>);
+    fn draw_image<'a>(&mut self, position: impl Into<Point>, image: impl Into<Image<'a>>);
 
     /// Draws an other render context to this context.
     fn draw_context(&mut self, position: impl Into<Point>, other: Self);

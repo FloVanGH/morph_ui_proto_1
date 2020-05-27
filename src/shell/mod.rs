@@ -90,7 +90,7 @@ where
         self.render_target.set_size(size);
         self
     }
-
+ 
     /// Start and run the shell.
     pub fn start(mut self) -> MorphResult<()> {
         log("Start");
