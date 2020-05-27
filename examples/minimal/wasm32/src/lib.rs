@@ -1,11 +1,13 @@
-use embedded_graphics::{mock_display::MockDisplay, pixelcolor::BinaryColor};
+use embedded_graphics::{mock_display::MockDisplay, pixelcolor::Rgb565};
 
 use wasm_bindgen::prelude::*;
+
+use morph::graphics::WasmDisplay;
 
 #[path = "../../minimal.rs"]
 mod minimal;
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    minimal::start_example::<MockDisplay<BinaryColor>, BinaryColor>(MockDisplay::new());
+    minimal::start_example::<WasmDisplay, Rgb565>(WasmDisplay::new());
 }

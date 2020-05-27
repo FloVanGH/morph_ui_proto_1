@@ -1,5 +1,7 @@
 pub use embedded_graphics::{DrawTarget, pixelcolor::PixelColor};
 
+pub use crate::platform::graphics::*;
+
 pub use self::brush::*;
 pub use self::color::*;
 pub use self::image::*;
