@@ -1,3 +1,5 @@
+pub use embedded_graphics::{DrawTarget, pixelcolor::PixelColor};
+
 pub use self::brush::*;
 pub use self::color::*;
 pub use self::image::*;

@@ -1,4 +1,5 @@
 pub use crate::{
     shell::*,
-    result::*
+    result::*,
+    graphics::{DrawTarget, PixelColor}
 };

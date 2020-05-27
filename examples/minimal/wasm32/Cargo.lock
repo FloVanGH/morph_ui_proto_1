@@ -229,6 +229,7 @@ name = "minimal"
 version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",
+ "embedded-graphics",
  "morph",
  "wasm-bindgen",
  "wasm-bindgen-test",
