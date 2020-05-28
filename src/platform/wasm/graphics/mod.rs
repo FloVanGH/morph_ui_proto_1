@@ -16,7 +16,7 @@ use super::utils;
 pub struct WasmDisplay {
     canvas: web_sys::HtmlCanvasElement,
     context: web_sys::CanvasRenderingContext2d,
-    frame_buffer: Vec<Color>,
+    frame_buffer: Vec<(u8, u8, u8, u8)>,
 }
 
 impl WasmDisplay {
@@ -34,7 +34,7 @@ impl WasmDisplay {
                 MorphError::Backend("WasmDisplay::new: Could not convert canvas context_2.")
             })?;
 
-        let frame_buffer = vec![Color { data: 0 }; (width * height) as usize];
+        let frame_buffer = vec![(0, 0, 0, 0); (width * height) as usize];
 
         Ok(WasmDisplay {
             canvas,
@@ -55,6 +55,8 @@ impl DrawTarget<Rgb565> for WasmDisplay {
                 "WasmDisplay::draw_pixel: Pixel coordinate is out of buffer bounds.",
             ));
         }
+
+        self.frame_buffer[(pixel.0.y * self.canvas.width() as i32 + pixel.0.x) as usize] = (pixel.1.r(), pixel.1.g(), pixel.1.b(), 255);
 
         let data = web_sys::ImageData::new_with_u8_clamped_array(
             Clamped(&mut vec![pixel.1.r(), pixel.1.g(), pixel.1.b(), 250]),
