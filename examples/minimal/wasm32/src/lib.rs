@@ -9,5 +9,5 @@ mod minimal;
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    minimal::start_example::<WasmDisplay, Rgb565>(WasmDisplay::new());
+    minimal::start_example::<WasmDisplay, Rgb565>(WasmDisplay::new(128,160).unwrap());
 }
