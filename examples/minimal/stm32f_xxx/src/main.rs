@@ -10,6 +10,8 @@ use cortex_m_rt as rt;
 use cortex_m_rt::ExceptionFrame;
 use cortex_m_rt::{entry, exception};
 
+use cortex_m_semihosting::hprintln;
+
 use hal::delay::Delay;
 use hal::prelude::*;
 use hal::spi::{Mode, Phase, Polarity, Spi};
@@ -19,13 +21,13 @@ use st7735_lcd::Orientation;
 
 use morph::embedded_graphics;
 
-use embedded_graphics::pixelcolor::Rgb565;
-
 use panic_semihosting;
 
 
 #[entry]
 fn main() -> ! {
+    hprintln!("Hello, world!").unwrap();
+
     let cp = cortex_m::Peripherals::take().unwrap();
     let dp = stm32::Peripherals::take().unwrap();
 
@@ -73,10 +75,6 @@ fn main() -> ! {
     disp.set_orientation(&Orientation::Landscape).unwrap();
  
     minimal::start_example(disp);
-
-    // exit QEMU
-    // NOTE do not run this on hardware; it can corrupt OpenOCD state
-    // debug::exit(debug::EXIT_SUCCESS);
 
     loop {}
 }

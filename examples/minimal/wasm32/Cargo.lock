@@ -42,6 +42,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08c48aae112d48ed9f069b33538ea9e3e90aa263cfa3d1c24309612b1f7472de"
 
 [[package]]
+name = "canvas-display"
+version = "0.1.0"
+source = "git+https://codeberg.org/morph/canvas-display.git#8738f8f905624511de4ef9ffb9cb4442e8ccb1bf"
+dependencies = [
+ "embedded-graphics",
+ "js-sys",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "cast"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -234,6 +245,7 @@ dependencies = [
 name = "morph"
 version = "0.1.0"
 dependencies = [
+ "canvas-display",
  "console_error_panic_hook",
  "cortex-m",
  "cortex-m-rt",

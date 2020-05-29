@@ -9,5 +9,5 @@ mod platform;
 mod platform;
 
 #[cfg(target_arch = "wasm32")]
-#[path = "wasm/mod.rs"]
+#[path = "wasm32/mod.rs"]
 mod platform;

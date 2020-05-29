@@ -27,9 +27,9 @@
             "name": "Debug (OpenOCD)",
             "servertype": "openocd",
             "cwd": "${workspaceRoot}",
-            "preLaunchTask": "build minimal cortex-m",
+            "preLaunchTask": "build minimal stm32f_xxx",
             "runToMain": true,
-            "executable": "./target/thumbv7m-none-eabi/debug/examples/minimal_cortex_m",
+            "executable": "./examples/minimal/stm32f_xxx/target/thumbv7m-none-eabi/release/minimal",
             /* Run `cargo build --example itm` and uncomment this line to run itm example */
             // "executable": "./target/thumbv7em-none-eabihf/debug/examples/itm",
             "device": "STM32F103C8T6",

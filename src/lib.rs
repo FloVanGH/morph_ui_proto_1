@@ -5,6 +5,12 @@
 // #![cfg(not(target_arch = "arm"))]
 // #![cfg_attr(feature = "no_std", no_std)]
 #![cfg_attr(not(feature = "std"), no_std)]
+
+pub use platform::log;
+
+#[cfg(target_arch = "wasm32")]
+pub use canvas_display;
+
 pub use embedded_graphics;
 pub mod geometry;
 pub mod graphics;

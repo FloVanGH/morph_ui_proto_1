@@ -10,7 +10,7 @@
             "args": [
                 "build",
                 "--manifest-path",
-                "${workspaceRoot}/examples/stm32f_xxx/minimal/Cargo.toml",
+                "${workspaceRoot}/examples/minimal/stm32f_xxx/Cargo.toml",
                 "--target",
                 "thumbv7m-none-eabi"
             ],

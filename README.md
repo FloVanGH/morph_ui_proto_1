@@ -6,7 +6,7 @@ Embedded Rust UI-Toolkit (no_std). Morph in shape.
 
 ## Usage
 
-To include OrbTk in your project, add this dependency
+To include morph in your project, add this dependency
 line to your `Cargo.toml` file:
 
 ```text
@@ -37,7 +37,7 @@ npm install npm@latest -g
 
 ### Run minimal example
 
-Navigate to the `www` sub directory and run:
+Navigate to the `examples/minimal/wasm32/` sub directory and run:
 
 ```shell
 npm install

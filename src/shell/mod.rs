@@ -2,20 +2,13 @@ pub use self::platform::log;
 
 use core::marker::PhantomData;
 
-use tinybmp::Bmp;
-
 use crate::{
     embedded_graphics::{
         image::{Image, ImageRaw, ImageRawLE},
         pixelcolor::PixelColor,
-        pixelcolor::Rgb565,
         prelude::*,
-        primitives::rectangle::Rectangle,
-        style::PrimitiveStyleBuilder,
         DrawTarget,
     },
-    graphics::Color,
-    geometry::Size,
     platform,
     result::*,
 };
@@ -82,11 +75,6 @@ where
         }
         
         Ok(())
-    }
-
-    /// Sets the size the application shell should use to draw on the screen.
-    pub fn size(mut self, size: impl Into<Size>) -> Self {
-        self
     }
 
     /// Start and run the shell.
