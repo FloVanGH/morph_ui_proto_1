@@ -12,7 +12,6 @@ pub use platform::log;
 pub use canvas_display;
 
 pub use embedded_graphics;
-pub mod geometry;
 pub mod graphics;
 mod platform;
 pub mod shell;

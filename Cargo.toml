@@ -23,6 +23,7 @@ derive_more = "0.99.7"
 heapless = "0.5.5"
 tinybmp = "0.2.3"
 embedded-graphics = "0.6.2"
+stretch = { git = "https://github.com/vislyhq/stretch.git", default-features = false }
 
 [target.thumbv7m-none-eabi.dependencies]
 embedded-hal = "0.2.3"
@@ -58,7 +59,7 @@ canvas-display = { git = "https://codeberg.org/morph/canvas-display.git" }
 
 [features]
 default = ["console_error_panic_hook", "std"]
-std = []
+std = ["stretch/std"]
 
 [profile.release]
 opt-level = "z"
