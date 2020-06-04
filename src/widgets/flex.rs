@@ -54,6 +54,8 @@ where
     C: PixelColor + From<<C as PixelColor>::Raw>,
 {
     fn into_result(self) -> MorphResult<Widget<Message, C>> {
-        Widget::new()
+        let mut widget = Widget::new()?;
+        widget.layout_style = self.layout_style;
+        Ok(widget)
     }
 }

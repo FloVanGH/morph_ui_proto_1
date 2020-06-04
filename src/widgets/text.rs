@@ -50,6 +50,7 @@ where
             .drawables
             .push(Drawable::Text(Text::new("", Point::default())))
             .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to label."))?;
+        widget.layout_style = self.layout_style;
         Ok(widget)
     }
 }
