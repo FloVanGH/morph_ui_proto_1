@@ -7,6 +7,30 @@
     "version": "0.2.0",
     "configurations": [
         {
+            //  Debug the STM32 Blue Pill program.
+            "name": "Debug (STM32 Blue Pill Rust)",
+            "type": "gdb",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+
+            //  This target setting is mandatory but redundant because it's specified in loader.gdb.
+            "target": "examples/minimal/stm32f_xxx/target/thumbv7m-none-eabi/debug/minimal",
+
+            //  Start arm-none-eabi-gdb with the loader.gdb script.  Connects to OpenOCD to send commands to ST-Link USB dongle.
+            "gdbpath": "arm-none-eabi-gdb",
+            "debugger_args": [
+                "-x",
+                "examples/minimal/stm32f_xxx/openocd.gdb"
+            ],
+
+            //  For debugger display, don't interpret values returned by gdb.
+            "valuesFormatting": "disabled",
+
+            //  Enable debug output.
+            "printCalls": false,
+            "showDevDebugOutput": false,
+        },
+        {
             "type": "cortex-debug",
             "request": "launch",
             "name": "Debug (QEMU)",
