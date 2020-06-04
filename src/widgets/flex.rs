@@ -56,6 +56,7 @@ where
     fn into_result(self) -> MorphResult<Widget<Message, C>> {
         let mut widget = Widget::new()?;
         widget.layout_style = self.layout_style;
+        widget.children = self.children;
         Ok(widget)
     }
 }

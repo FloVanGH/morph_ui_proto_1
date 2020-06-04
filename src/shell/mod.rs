@@ -27,17 +27,18 @@ use crate::{
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
-pub struct Shell<D: DrawTarget<C> + 'static, C: 'static>
+pub struct Shell<Message, D: DrawTarget<C> + 'static, C: 'static>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
 {
     is_running: bool,
     render: bool,
     draw_target: D,
+    view: Option<Widget<Message, C>>,
     _phantom: PhantomData<C>,
 }
 
-impl<D: DrawTarget<C> + 'static, C: 'static> Shell<D, C>
+impl<Message, D: DrawTarget<C> + 'static, C: 'static> Shell<Message, D, C>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
 {
@@ -48,12 +49,13 @@ where
             render: true,
             draw_target,
             _phantom: PhantomData::default(),
+            view: None
         }
     }
 
-    pub fn view<Message>(self, _widget: impl IntoResult<Widget<Message, C>>) -> Self {
-
-        self
+    pub fn view(mut self, view: impl IntoResult<Widget<Message, C>>) -> MorphResult<Self> {
+        self.view = Some(view.into_result()?);
+        Ok(self)
     }
 
     // Drain events.

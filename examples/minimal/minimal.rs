@@ -19,6 +19,6 @@ where
                         .on_tap(Message::Tapped),
                 )?
                 .child(Label::new().text("Hello from morph."))?,
-        )
+        )?
         .start()
 }
