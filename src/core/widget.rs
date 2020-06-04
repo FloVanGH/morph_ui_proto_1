@@ -1,5 +1,5 @@
 use stretch::style::Style;
-use heapless::{consts::*, String};
+use heapless::{consts::*, String, Vec};
 
 use crate::result::*;
 
@@ -30,7 +30,7 @@ pub struct Widget<Message> {
     pub is_dirty: bool,
     pub text: Option<String<U16>>,
     pub on_tap: Option<Message>,
-    pub layout_style: Style
+    pub layout_style: Style,
 }
 
 impl<Message> Widget<Message> {
