@@ -50,4 +50,8 @@ impl<Message, C> Widget<Message, C>  where C: PixelColor + From<<C as PixelColor
             drawables: Vec::new()
         })
     }
+
+    pub fn id(&self) -> WidgetId {
+        self.id
+    }
 }
