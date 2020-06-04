@@ -1,3 +1,5 @@
+use heapless::ArrayLength;
+
 use crate::result::*;
 
 pub type WidgetId = u8;
