@@ -24,5 +24,5 @@ pub enum MorphError {
 
 /// Used to convert a value into an other and wrapped by a result.
 pub trait IntoResult<T> {
-    fn into(self) -> MorphResult<T>;
+    fn into_result(self) -> MorphResult<T>;
 }

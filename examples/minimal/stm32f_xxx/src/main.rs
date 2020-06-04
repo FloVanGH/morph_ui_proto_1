@@ -4,8 +4,8 @@
 #[path = "../../minimal.rs"]
 mod minimal;
 
-use stm32f1xx_hal as hal;
 use cortex_m_rt as rt;
+use stm32f1xx_hal as hal;
 
 use cortex_m_rt::ExceptionFrame;
 use cortex_m_rt::{entry, exception};
@@ -22,7 +22,6 @@ use st7735_lcd::Orientation;
 use morph::embedded_graphics;
 
 use panic_semihosting;
-
 
 #[entry]
 fn main() -> ! {
@@ -73,7 +72,7 @@ fn main() -> ! {
 
     disp.init(&mut delay).unwrap();
     disp.set_orientation(&Orientation::Landscape).unwrap();
- 
+
     minimal::start_example(disp);
 
     loop {}

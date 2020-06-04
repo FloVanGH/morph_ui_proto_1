@@ -1,6 +1,10 @@
 use heapless::{consts::*, String};
 
-use crate::{core::Widget, result::*};
+use crate::{
+    core::{Drawable, Widget},
+    embedded_graphics::{fonts::Text, geometry::Point, pixelcolor::PixelColor, primitives::*},
+    result::*,
+};
 
 #[derive(Debug, Clone)]
 pub struct Button<Message> {
@@ -33,10 +37,21 @@ impl<Message> Button<Message> {
     }
 }
 
-impl<Message> IntoResult<Widget<Message>> for Button<Message> {
-    fn into(self) -> MorphResult<Widget<Message>> {
+impl<Message, C> IntoResult<Widget<Message, C>> for Button<Message>
+where
+    C: PixelColor + From<<C as PixelColor>::Raw>,
+{
+    fn into_result(self) -> MorphResult<Widget<Message, C>> {
         let mut widget = Widget::new()?;
         widget.text = Some(self.text);
+        widget
+            .drawables
+            .push(Drawable::Rectangle(Rectangle::default()))
+            .map_err(|_| MorphError::OutOfBounds("Could not add rectangle drawable to button."))?;
+        widget
+            .drawables
+            .push(Drawable::Text(Text::new("", Point::default())))
+            .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to button."))?;
         Ok(widget)
     }
 }

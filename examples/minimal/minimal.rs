@@ -8,8 +8,11 @@ pub fn start_example<D: DrawTarget<C> + 'static, C: 'static>(draw_target: D) -> 
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
 {
-    let flex = Flex::new()
-        .child(Button::new().on_tap(Message::Tapped).text("Tap me"))?
-        .child(Text::new().text("Hello from morph."));
-    Shell::new(draw_target).start()
+    Shell::new(draw_target)
+        .view(
+            Flex::new()
+                .child(Button::new().on_tap(Message::Tapped).text("Tap me"))?
+                .child(Label::new().text("Hello from morph."))?,
+        )
+        .start()
 }

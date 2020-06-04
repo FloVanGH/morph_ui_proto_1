@@ -1,21 +1,23 @@
+
+
 use heapless::{consts::*, String};
 
-use crate::{core::Widget, result::*};
+use crate::{core::{Widget, Drawable}, result::*, embedded_graphics::{geometry::Point, pixelcolor::PixelColor, fonts::Text }};
 
 #[derive(Debug, Clone)]
-pub struct Text {
+pub struct Label {
     text: String<U16>
 }
 
-impl Default for Text {
+impl Default for Label {
     fn default() -> Self {
-        Text {
+        Label {
             text: String::default()
         }
     }
 }
 
-impl Text {
+impl Label {
     pub fn new() -> Self {
         Self::default()
     }
@@ -26,10 +28,14 @@ impl Text {
     }
 }
 
-impl<Message> IntoResult<Widget<Message>> for Text {
-    fn into(self) -> MorphResult<Widget<Message>> {
+impl<Message, C> IntoResult<Widget<Message, C>> for Label where C: PixelColor + From<<C as PixelColor>::Raw> {
+    fn into_result(self) -> MorphResult<Widget<Message, C>> {
         let mut widget = Widget::new()?;
         widget.text = Some(self.text);
+        widget
+        .drawables
+        .push(Drawable::Text(Text::new("", Point::default())))
+        .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to label."))?;
         Ok(widget)
     }  
 }

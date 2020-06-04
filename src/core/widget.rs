@@ -1,7 +1,11 @@
+use embedded_graphics::pixelcolor::PixelColor;
+
 use stretch::style::Style;
 use heapless::{consts::*, String, Vec};
 
 use crate::result::*;
+
+use super::Drawable;
 
 pub type WidgetId = u8;
 
@@ -24,16 +28,16 @@ fn get_widget_id() -> MorphResult<WidgetId> {
     Ok(id)
 }
 
-#[derive(Debug, Clone)]
-pub struct Widget<Message> {
+pub struct Widget<Message, C: 'static> where C: PixelColor + From<<C as PixelColor>::Raw>  {
     id: WidgetId,
     pub is_dirty: bool,
     pub text: Option<String<U16>>,
     pub on_tap: Option<Message>,
     pub layout_style: Style,
+    pub drawables: Vec<Drawable<C>, U4>,
 }
 
-impl<Message> Widget<Message> {
+impl<Message, C> Widget<Message, C>  where C: PixelColor + From<<C as PixelColor>::Raw> {
     pub fn new() -> MorphResult<Self> {
         let id = get_widget_id()?;
 
@@ -42,7 +46,8 @@ impl<Message> Widget<Message> {
             is_dirty: true,
             text: None,
             on_tap: None,
-            layout_style: Style::default()
+            layout_style: Style::default(),
+            drawables: Vec::new()
         })
     }
 }

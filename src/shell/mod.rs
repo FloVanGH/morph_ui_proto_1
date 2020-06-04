@@ -3,6 +3,7 @@ pub use self::platform::log;
 use core::marker::PhantomData;
 
 use crate::{
+    core::Widget,
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -48,6 +49,11 @@ where
             draw_target,
             _phantom: PhantomData::default(),
         }
+    }
+
+    pub fn view<Message>(self, _widget: impl IntoResult<Widget<Message, C>>) -> Self {
+
+        self
     }
 
     // Drain events.
