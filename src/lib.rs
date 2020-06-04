@@ -12,8 +12,11 @@ pub use platform::log;
 pub use canvas_display;
 
 pub use embedded_graphics;
+
+pub mod core;
 pub mod graphics;
 mod platform;
 pub mod shell;
 pub mod prelude;
 pub mod result;
+pub mod widgets;

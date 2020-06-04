@@ -21,3 +21,8 @@ pub enum MorphError {
     /// Not specified morph error.
     Other(&'static str)
 }
+
+/// Used to convert a value into an other and wrapped by a result.
+pub trait IntoResult<T> {
+    fn into(self) -> MorphResult<T>;
+}
