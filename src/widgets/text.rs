@@ -26,8 +26,10 @@ impl Text {
     }
 }
 
-impl IntoResult<Widget> for Text {
-    fn into(self) -> MorphResult<Widget> {
-        Widget::new()
+impl<Message> IntoResult<Widget<Message>> for Text {
+    fn into(self) -> MorphResult<Widget<Message>> {
+        let mut widget = Widget::new()?;
+        widget.text = Some(self.text);
+        Ok(widget)
     }  
 }

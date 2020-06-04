@@ -1,19 +1,27 @@
 use crate::{core::Widget, result::*};
 use heapless::{consts::*, Vec};
 
-#[derive(Debug, Default, Clone)]
-pub struct Flex {
-    children: Vec<Widget, U8>,
+#[derive(Debug, Clone)]
+pub struct Flex<Message> {
+    children: Vec<Widget<Message>, U8>,
 }
 
-impl Flex {
+impl<Message> Flex<Message> {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-impl Flex {
-    pub fn child(mut self, child: impl IntoResult<Widget>) -> MorphResult<Self> {
+impl<Message> Default for Flex<Message> {
+    fn default() -> Self {
+        Flex {
+            children: Vec::default()
+        }
+    }
+}
+
+impl<Message> Flex<Message>{
+    pub fn child(mut self, child: impl IntoResult<Widget<Message>>) -> MorphResult<Self> {
         self.children
             .push(child.into()?)
             .map_err(|_| MorphError::OutOfBounds("Flex::child: could not add more children."))?;
@@ -21,8 +29,8 @@ impl Flex {
     }
 }
 
-impl IntoResult<Widget> for Flex {
-    fn into(self) -> MorphResult<Widget> {
+impl<Message> IntoResult<Widget<Message>> for Flex<Message> {
+    fn into(self) -> MorphResult<Widget<Message>> {
         Widget::new()
     }
 }

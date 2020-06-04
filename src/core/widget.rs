@@ -1,4 +1,5 @@
-use heapless::ArrayLength;
+use stretch::style::Style;
+use heapless::{consts::*, String};
 
 use crate::result::*;
 
@@ -15,7 +16,7 @@ fn get_widget_id() -> MorphResult<WidgetId> {
     let id = unsafe { WIDGET_ID };
 
     if id as usize > MAX_WIDGETS {
-        return Err(MorphError::OutOfBounds("Too many widgets are created."));
+        return Err(MorphError::OutOfBounds("Maximum of widgets is reached. Could not create more widgets."));
     }
 
     unsafe { WIDGET_ID += 1; }
@@ -24,18 +25,24 @@ fn get_widget_id() -> MorphResult<WidgetId> {
 }
 
 #[derive(Debug, Clone)]
-pub struct Widget {
+pub struct Widget<Message> {
     id: WidgetId,
-    pub is_dirty: bool
+    pub is_dirty: bool,
+    pub text: Option<String<U16>>,
+    pub on_tap: Option<Message>,
+    pub layout_style: Style
 }
 
-impl Widget {
+impl<Message> Widget<Message> {
     pub fn new() -> MorphResult<Self> {
         let id = get_widget_id()?;
 
         Ok(Widget {
             id,
-            is_dirty: true
+            is_dirty: true,
+            text: None,
+            on_tap: None,
+            layout_style: Style::default()
         })
     }
 }

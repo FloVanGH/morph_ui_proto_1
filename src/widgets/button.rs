@@ -5,14 +5,14 @@ use crate::{core::Widget, result::*};
 #[derive(Debug, Clone)]
 pub struct Button<Message> {
     on_tap: Option<Message>,
-    text: String<U16>
+    text: String<U16>,
 }
 
 impl<Message> Default for Button<Message> {
     fn default() -> Self {
         Button {
             on_tap: None,
-            text: String::default()
+            text: String::default(),
         }
     }
 }
@@ -33,8 +33,10 @@ impl<Message> Button<Message> {
     }
 }
 
-impl<Message> IntoResult<Widget> for Button<Message> {
-    fn into(self) -> MorphResult<Widget> {
-        Widget::new()
-    }  
+impl<Message> IntoResult<Widget<Message>> for Button<Message> {
+    fn into(self) -> MorphResult<Widget<Message>> {
+        let mut widget = Widget::new()?;
+        widget.text = Some(self.text);
+        Ok(widget)
+    }
 }
