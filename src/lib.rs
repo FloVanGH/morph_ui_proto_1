@@ -14,6 +14,7 @@ pub use canvas_display;
 pub use embedded_graphics;
 
 pub mod core;
+pub mod geometry;
 pub mod graphics;
 mod platform;
 pub mod shell;

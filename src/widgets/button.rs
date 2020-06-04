@@ -1,7 +1,10 @@
 use heapless::{consts::*, String};
 
+use stretch::style::Style;
+
 use crate::{
     core::{Drawable, Widget},
+    geometry::Thickness,
     embedded_graphics::{fonts::Text, geometry::Point, pixelcolor::PixelColor, primitives::*},
     result::*,
 };
@@ -10,6 +13,7 @@ use crate::{
 pub struct Button<Message> {
     on_tap: Option<Message>,
     text: String<U16>,
+    layout_style: Style
 }
 
 impl<Message> Default for Button<Message> {
@@ -17,6 +21,7 @@ impl<Message> Default for Button<Message> {
         Button {
             on_tap: None,
             text: String::default(),
+            layout_style: Style::default()
         }
     }
 }
@@ -33,6 +38,11 @@ impl<Message> Button<Message> {
 
     pub fn on_tap(mut self, message: Message) -> Self {
         self.on_tap = Some(message);
+        self
+    }
+
+    pub fn margin(mut self, margin: impl Into<Thickness>) -> Self {
+        self.layout_style.margin = margin.into().into();
         self
     }
 }
@@ -52,6 +62,7 @@ where
             .drawables
             .push(Drawable::Text(Text::new("", Point::default())))
             .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to button."))?;
+        widget.layout_style = self.layout_style;
         Ok(widget)
     }
 }

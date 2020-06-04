@@ -11,7 +11,13 @@ where
     Shell::new(draw_target)
         .view(
             Flex::new()
-                .child(Button::new().on_tap(Message::Tapped).text("Tap me"))?
+                .margin(4)
+                .child(
+                    Button::new()
+                        .text("Tap me")
+                        .margin((0, 0, 8, 0))
+                        .on_tap(Message::Tapped),
+                )?
                 .child(Label::new().text("Hello from morph."))?,
         )
         .start()
