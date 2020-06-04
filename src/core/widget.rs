@@ -35,7 +35,7 @@ pub struct Widget<Message, C: 'static> where C: PixelColor + From<<C as PixelCol
     pub on_tap: Option<Message>,
     pub layout_style: Style,
     pub drawables: Vec<Drawable<C>, U4>,
-    pub children: Vec<Widget<Message, C>, U8>
+    // pub children: Vec<Widget<Message, C>, U8>
 }
 
 impl<Message, C> Widget<Message, C>  where C: PixelColor + From<<C as PixelColor>::Raw> {
@@ -49,7 +49,7 @@ impl<Message, C> Widget<Message, C>  where C: PixelColor + From<<C as PixelColor
             on_tap: None,
             layout_style: Style::default(),
             drawables: Vec::new(),
-            children: Vec::new()
+            // children: Vec::new()
         })
     }
 

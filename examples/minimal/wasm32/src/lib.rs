@@ -9,5 +9,5 @@ mod minimal;
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    minimal::start_example::<CanvasDisplay, Rgb565>(CanvasDisplay::new(128,160, "morph_canvas").unwrap());
+    let _ = minimal::start_example::<CanvasDisplay, Rgb565>(CanvasDisplay::new(128,160, "morph_canvas").unwrap());
 }
