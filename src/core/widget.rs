@@ -26,6 +26,10 @@ pub fn get_widget_id() -> MorphResult<WidgetId> {
     Ok(id)
 }
 
+pub (crate) fn reset_widget_id() {
+    unsafe { WIDGET_ID = 0; }
+}
+
 pub struct Widget<Message>  {
     id: WidgetId,
     pub name: String<U8>,
@@ -35,6 +39,7 @@ pub struct Widget<Message>  {
     pub on_tap: Option<Message>,
     pub layout_style: Style,
     pub drawables: Vec<Drawable, U4>,
+    pub is_pressed: Option<bool>,
     pub size: Size
 }
 
@@ -53,11 +58,20 @@ impl<Message> Widget<Message> {
             on_tap: None,
             layout_style: Style::default(),
             drawables: Vec::new(),
+            is_pressed: None,
             size: Size::default()
         })
     }
 
     pub fn id(&self) -> WidgetId {
         self.id
+    }
+
+    pub fn copy_state(&mut self, other: &Widget<Message>) {
+        if self.id != other.id || self.name != other.name {
+            return;
+        }
+
+        self.is_pressed = other.is_pressed;
     }
 }

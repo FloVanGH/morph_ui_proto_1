@@ -5,7 +5,7 @@ use heapless::{consts::*, String, Vec};
 pub use self::platform::log;
 
 use crate::{
-    core::{Context, View, WidgetId},
+    core::{Context, View, WidgetId, reset_widget_id},
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -59,11 +59,40 @@ where
         }
     }
 
-    fn init(&mut self) -> MorphResult<()> {
+    // Copy states from old tree to new. 
+    //
+    // ! This works only if the structure of the widget tree doesn't change.!
+    // ! If this will changed in the future this logic must also be changed!
+    fn copy_states(&mut self, id: WidgetId, new_ctx: &mut Context<Message>) {
+        if let Some(widget) = self.context.get_mut(id) {
+            if let Some(new_widget) = &mut new_ctx.get_mut(id) {
+                new_widget.copy_state(widget);
+            }
+        }
+
+        if let Some(children_len) = self.context.children_len(id) {
+            for i in 0..children_len {
+                if let Some(child) = self.context.get_child_id(id, i).map(|i| *i) {
+                    self.copy_states(child, new_ctx);
+                }
+            }
+        }
+    }
+
+    fn build(&mut self) -> MorphResult<()> {
+        reset_widget_id();
+
         let mut ctx = Context::new();
         if let Some(view) = &mut self.view {
             let root = view.view(&mut ctx)?;
             ctx.push(None, root)?;
+        }
+
+        // by init.
+        if !self.context.is_empty() {
+            if let Some(root) = self.context.root() {
+                self.copy_states(root, &mut ctx);
+            }
         }
 
         self.context = ctx;
@@ -228,7 +257,7 @@ where
             }
             self.drain_events()?;
             self.update()?;
-            self.init()?;
+            self.build()?;
             self.draw()?;
 
             Ok(())
