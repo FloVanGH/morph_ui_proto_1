@@ -3,7 +3,6 @@ use stretch::style::Style;
 
 use crate::{
     core::{Drawable, Widget},
-    embedded_graphics::{fonts::Text, geometry::Point, pixelcolor::PixelColor},
     geometry::Thickness,
     result::*,
 };
@@ -40,16 +39,14 @@ impl Label {
     }
 }
 
-impl<Message, C> IntoResult<Widget<Message, C>> for Label
-where
-    C: PixelColor + From<<C as PixelColor>::Raw>,
+impl<Message> IntoResult<Widget<Message>> for Label
 {
-    fn into_result(self) -> MorphResult<Widget<Message, C>> {
+    fn into_result(self) -> MorphResult<Widget<Message>> {
         let mut widget = Widget::new()?;
         widget.text = Some(self.text);
         widget
             .drawables
-            .push(Drawable::Text(Text::new("", Point::default())))
+            .push(Drawable::Text)
             .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to label."))?;
         widget.layout_style = self.layout_style;
         Ok(widget)

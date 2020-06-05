@@ -5,7 +5,6 @@ use stretch::style::Style;
 use crate::{
     core::{Drawable, Widget},
     geometry::Thickness,
-    embedded_graphics::{fonts::Text, geometry::Point, pixelcolor::PixelColor, primitives::*},
     result::*,
 };
 
@@ -48,20 +47,18 @@ impl<Message> Button<Message> {
     }
 }
 
-impl<Message, C> IntoResult<Widget<Message, C>> for Button<Message>
-where
-    C: PixelColor + From<<C as PixelColor>::Raw>,
+impl<Message> IntoResult<Widget<Message>> for Button<Message>
 {
-    fn into_result(self) -> MorphResult<Widget<Message, C>> {
+    fn into_result(self) -> MorphResult<Widget<Message>> {
         let mut widget = Widget::new()?;
         widget.text = Some(self.text);
         widget
             .drawables
-            .push(Drawable::Rectangle(Rectangle::default()))
+            .push(Drawable::Rectangle)
             .map_err(|_| MorphError::OutOfBounds("Could not add rectangle drawable to button."))?;
         widget
             .drawables
-            .push(Drawable::Text(Text::new("", Point::default())))
+            .push(Drawable::Text)
             .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to button."))?;
         widget.layout_style = self.layout_style;
         Ok(widget)

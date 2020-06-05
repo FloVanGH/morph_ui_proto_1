@@ -1,45 +1,32 @@
 use heapless::{consts::*, Vec};
 use stretch::style::Style;
 
-use crate::{core::Widget, geometry::Thickness, embedded_graphics::pixelcolor::PixelColor, result::*};
+use crate::{
+    core::{Context, Widget, WidgetId},
+    embedded_graphics::pixelcolor::PixelColor,
+    geometry::Thickness,
+    result::*,
+};
 
-pub struct Flex<Message, C: 'static>
-where
-    C: PixelColor + From<<C as PixelColor>::Raw>,
-{
-    children: Vec<Widget<Message, C>, U8>,
+#[derive(Debug, Default)]
+pub struct Flex {
+    id: WidgetId,
     layout_style: Style,
 }
 
-impl<Message, C> Flex<Message, C>
-where
-    C: PixelColor + From<<C as PixelColor>::Raw>,
-{
+impl Flex {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-impl<Message, C> Default for Flex<Message, C>
-where
-    C: PixelColor + From<<C as PixelColor>::Raw>,
-{
-    fn default() -> Self {
-        Flex {
-            children: Vec::default(),
-            layout_style: Style::default(),
-        }
-    }
-}
-
-impl<Message, C> Flex<Message, C>
-where
-    C: PixelColor + From<<C as PixelColor>::Raw>,
-{
-    pub fn child(mut self, child: impl IntoResult<Widget<Message, C>>) -> MorphResult<Self> {
-        self.children
-            .push(child.into_result()?)
-            .map_err(|_| MorphError::OutOfBounds("Flex::child: could not add more children."))?;
+impl Flex {
+    pub fn child<Message>(
+        self,
+        context: &mut Context<Message>,
+        child: impl IntoResult<Widget<Message>>,
+    ) -> MorphResult<Self> {
+        context.push(Some(self.id), child.into_result()?)?;
         Ok(self)
     }
 
@@ -49,12 +36,9 @@ where
     }
 }
 
-impl<Message, C> IntoResult<Widget<Message, C>> for Flex<Message, C>
-where
-    C: PixelColor + From<<C as PixelColor>::Raw>,
-{
-    fn into_result(self) -> MorphResult<Widget<Message, C>> {
-        let mut widget = Widget::new()?;
+impl<Message> IntoResult<Widget<Message>> for Flex {
+    fn into_result(self) -> MorphResult<Widget<Message>> {
+        let mut widget = Widget::from_id(self.id)?;
         widget.layout_style = self.layout_style;
         // widget.children = self.children;
         Ok(widget)

@@ -1,9 +1,9 @@
-pub use self::platform::log;
-
 use core::marker::PhantomData;
 
+pub use self::platform::log;
+
 use crate::{
-    core::Widget,
+    core::{Widget, Context},
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -34,8 +34,8 @@ where
     is_running: bool,
     render: bool,
     draw_target: D,
-    view: Option<Widget<Message, C>>,
-    _phantom: PhantomData<C>,
+    context: Context<Message>,
+    _phantom: PhantomData<C>
 }
 
 impl<Message, D: DrawTarget<C> + 'static, C: 'static> Shell<Message, D, C>
@@ -48,13 +48,14 @@ where
             is_running: true,
             render: true,
             draw_target,
-            _phantom: PhantomData::default(),
-            view: None
+            context: Context::new(),
+            _phantom: PhantomData::default()
         }
     }
 
-    pub fn view(mut self, view: impl IntoResult<Widget<Message, C>>) -> MorphResult<Self> {
-        self.view = Some(view.into_result()?);
+    pub fn view<F: Fn(&mut Context<Message>) -> MorphResult<Widget<Message>> + 'static>(mut self, build_fn: F) -> MorphResult<Self> {
+        let root = build_fn(&mut self.context)?;
+        self.context.push(None, root)?;
         Ok(self)
     }
 
@@ -71,6 +72,11 @@ where
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
         if self.render {
+
+            if let Some(root) = self.context.root() {
+                
+            }
+
             let color = Color::from("#000000");
             let style = PrimitiveStyleBuilder::new()
                 .fill_color(C::from(C::Raw::from_u32(color.data)))

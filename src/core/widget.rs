@@ -28,20 +28,21 @@ fn get_widget_id() -> MorphResult<WidgetId> {
     Ok(id)
 }
 
-pub struct Widget<Message, C: 'static> where C: PixelColor + From<<C as PixelColor>::Raw>  {
+pub struct Widget<Message>  {
     id: WidgetId,
     pub is_dirty: bool,
     pub text: Option<String<U64>>,
     pub on_tap: Option<Message>,
     pub layout_style: Style,
-    pub drawables: Vec<Drawable<C>, U4>,
-    // pub children: Vec<Widget<Message, C>, U8>
+    pub drawables: Vec<Drawable, U4>,
 }
 
-impl<Message, C> Widget<Message, C>  where C: PixelColor + From<<C as PixelColor>::Raw> {
+impl<Message> Widget<Message> {
     pub fn new() -> MorphResult<Self> {
-        let id = get_widget_id()?;
+       Self::from_id(get_widget_id()?)
+    }
 
+    pub fn from_id(id: WidgetId) -> MorphResult<Self> {
         Ok(Widget {
             id,
             is_dirty: true,

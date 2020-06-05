@@ -9,16 +9,18 @@ where
     C: PixelColor + From<<C as PixelColor>::Raw>,
 {
     Shell::new(draw_target)
-        .view(
+        .view(|ctx| {
             Flex::new()
                 .margin(4)
                 .child(
+                    ctx,
                     Button::new()
                         .text("Tap me")?
                         .margin((0, 0, 8, 0))
                         .on_tap(Message::Tapped),
                 )?
-                .child(Label::new().text("Hello from morph.")?)?,
-        )?
+                .child(ctx, Label::new().text("Hello from morph.")?)?
+                .into_result()
+        })?
         .start()
 }
