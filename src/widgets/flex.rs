@@ -1,9 +1,7 @@
-use heapless::{consts::*, Vec};
 use stretch::style::Style;
 
 use crate::{
-    core::{Context, Widget, WidgetId},
-    embedded_graphics::pixelcolor::PixelColor,
+    core::{Context, Widget, WidgetId, get_widget_id},
     geometry::Thickness,
     result::*,
 };
@@ -15,8 +13,11 @@ pub struct Flex {
 }
 
 impl Flex {
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new() -> MorphResult<Self> {
+        Ok(Flex {
+            id: get_widget_id()?,
+            layout_style: Style::default()
+        })
     }
 }
 
@@ -39,6 +40,7 @@ impl Flex {
 impl<Message> IntoResult<Widget<Message>> for Flex {
     fn into_result(self) -> MorphResult<Widget<Message>> {
         let mut widget = Widget::from_id(self.id)?;
+        widget.name.push_str("Flex").map_err(|_| MorphError::OutOfBounds("Could not set name for flex."))?;
         widget.layout_style = self.layout_style;
         // widget.children = self.children;
         Ok(widget)

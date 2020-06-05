@@ -32,16 +32,30 @@ impl<Message> Context<Message> {
             self.root = Some(id);
         }
 
-        if !self.children.contains_key(&id) {
+        if let Some(parent) = parent {
+            if !self.children.contains_key(&parent) {
+                self.children
+                    .insert(parent, Vec::new())
+                    .map(|_| ())
+                    .map_err(|_| MorphError::OutOfBounds(MAXIMUM_WIDGETS))?;
+            }
+
+            // unwrap because if the children vec for the parent does not exist it will be added before
             self.children
-                .insert(id, Vec::new())
+                .get_mut(&parent)
+                .unwrap()
+                .push(id)
+                .map_err(|_| MorphError::OutOfBounds(MAXIMUM_WIDGETS))?;
+
+            self.parent
+                .insert(id, parent)
                 .map(|_| ())
                 .map_err(|_| MorphError::OutOfBounds(MAXIMUM_WIDGETS))?;
         }
 
-        if let Some(parent) = parent {
-            self.parent
-                .insert(id, parent)
+        if !self.children.contains_key(&id) {
+            self.children
+                .insert(id, Vec::new())
                 .map(|_| ())
                 .map_err(|_| MorphError::OutOfBounds(MAXIMUM_WIDGETS))?;
         }
@@ -58,7 +72,7 @@ impl<Message> Context<Message> {
 
     pub fn children_len(&self, parent: WidgetId) -> Option<usize> {
         if let Some(children) = self.children.get(&parent) {
-            return Some(children.len())
+            return Some(children.len());
         }
 
         None
@@ -66,7 +80,7 @@ impl<Message> Context<Message> {
 
     pub fn get_child_id(&self, parent: WidgetId, index: usize) -> Option<&WidgetId> {
         if let Some(children) = self.children.get(&parent) {
-            return children.get(index)
+            return children.get(index);
         }
 
         None

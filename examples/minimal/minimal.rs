@@ -10,7 +10,7 @@ where
 {
     Shell::new(draw_target)
         .view(|ctx| {
-            Flex::new()
+            Flex::new()?
                 .margin(4)
                 .child(
                     ctx,

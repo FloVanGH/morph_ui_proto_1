@@ -51,6 +51,7 @@ impl<Message> IntoResult<Widget<Message>> for Button<Message>
 {
     fn into_result(self) -> MorphResult<Widget<Message>> {
         let mut widget = Widget::new()?;
+        widget.name.push_str("Button").map_err(|_| MorphError::OutOfBounds("Could not set name for button."))?;
         widget.text = Some(self.text);
         widget
             .drawables

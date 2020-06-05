@@ -3,7 +3,7 @@ use core::marker::PhantomData;
 pub use self::platform::log;
 
 use crate::{
-    core::{Widget, Context},
+    core::{Context, Widget, WidgetId},
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -35,7 +35,7 @@ where
     render: bool,
     draw_target: D,
     context: Context<Message>,
-    _phantom: PhantomData<C>
+    _phantom: PhantomData<C>,
 }
 
 impl<Message, D: DrawTarget<C> + 'static, C: 'static> Shell<Message, D, C>
@@ -49,11 +49,14 @@ where
             render: true,
             draw_target,
             context: Context::new(),
-            _phantom: PhantomData::default()
+            _phantom: PhantomData::default(),
         }
     }
 
-    pub fn view<F: Fn(&mut Context<Message>) -> MorphResult<Widget<Message>> + 'static>(mut self, build_fn: F) -> MorphResult<Self> {
+    pub fn view<F: Fn(&mut Context<Message>) -> MorphResult<Widget<Message>> + 'static>(
+        mut self,
+        build_fn: F,
+    ) -> MorphResult<Self> {
         let root = build_fn(&mut self.context)?;
         self.context.push(None, root)?;
         Ok(self)
@@ -69,12 +72,27 @@ where
         Ok(())
     }
 
+    pub fn int_draw(&mut self, id: WidgetId) -> MorphResult<()> {
+        if let Some(widget) = self.context.get(id) {
+            log(widget.name.as_str());
+        };
+
+        if let Some(children_len) = self.context.children_len(id) {    
+            for i in 0..children_len {
+                if let Some(child) = self.context.get_child_id(id, i).map(|i| *i) {
+                    self.int_draw(child)?;
+                }
+            }
+        }
+
+        Ok(())
+    }
+
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
         if self.render {
-
             if let Some(root) = self.context.root() {
-                
+                self.int_draw(root)?;
             }
 
             let color = Color::from("#000000");
@@ -113,8 +131,6 @@ where
 
     /// Start and run the shell.
     pub fn start(mut self) -> MorphResult<()> {
-        log("Start");
-
         platform::main_loop(move |running| {
             if !self.is_running {
                 *running = false;

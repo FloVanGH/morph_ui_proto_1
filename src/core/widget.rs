@@ -16,7 +16,7 @@ const MAX_WIDGETS: usize = 10;
 static mut WIDGET_ID: WidgetId = 0;
 
 // Returns an unique widget id.
-fn get_widget_id() -> MorphResult<WidgetId> {
+pub fn get_widget_id() -> MorphResult<WidgetId> {
     let id = unsafe { WIDGET_ID };
 
     if id as usize > MAX_WIDGETS {
@@ -30,6 +30,7 @@ fn get_widget_id() -> MorphResult<WidgetId> {
 
 pub struct Widget<Message>  {
     id: WidgetId,
+    pub name: String<U8>,
     pub is_dirty: bool,
     pub text: Option<String<U64>>,
     pub on_tap: Option<Message>,
@@ -45,12 +46,12 @@ impl<Message> Widget<Message> {
     pub fn from_id(id: WidgetId) -> MorphResult<Self> {
         Ok(Widget {
             id,
+            name: String::new(),
             is_dirty: true,
             text: None,
             on_tap: None,
             layout_style: Style::default(),
             drawables: Vec::new(),
-            // children: Vec::new()
         })
     }
 

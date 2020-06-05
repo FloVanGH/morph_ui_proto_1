@@ -29,7 +29,7 @@ impl Label {
 
     pub fn text(mut self, text: &str) -> MorphResult<Self> {
         self.text.clear();
-        self.text.push_str(text).map_err(|_| MorphError::OutOfBounds("Could not set text to Label. Text is to long."))?;
+        self.text.push_str(text).map_err(|_| MorphError::OutOfBounds("Could not set text to label. Text is to long."))?;
         Ok(self)
     }
 
@@ -43,6 +43,7 @@ impl<Message> IntoResult<Widget<Message>> for Label
 {
     fn into_result(self) -> MorphResult<Widget<Message>> {
         let mut widget = Widget::new()?;
+        widget.name.push_str("Label").map_err(|_| MorphError::OutOfBounds("Could not set name for label."))?;
         widget.text = Some(self.text);
         widget
             .drawables
