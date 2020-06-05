@@ -5,7 +5,7 @@ use heapless::{consts::*, String, Vec};
 pub use self::platform::log;
 
 use crate::{
-    core::{reset_widget_id, Context, View, WidgetId, IntoStyle},
+    core::{reset_widget_id, Context, IntoStyle, View, WidgetId},
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -43,7 +43,7 @@ pub struct Shell<Message: 'static, D: DrawTarget<C> + 'static, C: 'static, V: 's
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
     V: View<Message, S>,
-    S: IntoStyle
+    S: IntoStyle,
 {
     is_running: bool,
     render: bool,
@@ -57,7 +57,7 @@ impl<Message, D: DrawTarget<C>, C, V, S> Shell<Message, D, C, V, S>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
     V: View<Message, S>,
-    S: IntoStyle
+    S: IntoStyle,
 {
     /// Creates a new shell with a given render target.
     pub fn new(draw_target: D) -> Self {
@@ -131,19 +131,33 @@ where
         if let Some(widget) = self.context.get(id) {
             log(widget.name.as_str());
 
+            let style = widget.style();
+
             for i in 0..widget.drawables.len() {
                 match widget.drawables.get(i).unwrap().clone() {
                     crate::core::Drawable::Rectangle => {
                         let rectangle = Rectangle::new(Point::new(0, 0), Point::new(100, 100));
 
+                        let mut style_builder = PrimitiveStyleBuilder::new();
+
+                        if let Some(style) = style {
+                            if let Some(background) = style.background {
+                                style_builder = style_builder
+                                    .fill_color(C::from(C::Raw::from_u32(background.data)));
+                            }
+
+                            if let Some(border_color) = style.border_color {
+                                style_builder = style_builder
+                                    .stroke_color(C::from(C::Raw::from_u32(border_color.data)));
+                            }
+
+                            if let Some(border_width) = style.border_width {
+                                style_builder = style_builder.stroke_width(border_width);
+                            }
+                        }
+
                         rectangle
-                            .into_styled(
-                                PrimitiveStyleBuilder::new()
-                                    .fill_color(C::from(C::Raw::from_u32(
-                                        Color::from("#000000").data,
-                                    )))
-                                    .build(),
-                            )
+                            .into_styled(style_builder.build())
                             .draw(&mut self.draw_target)
                             .map_err(|_| MorphError::Backend("Could not draw rectangle."))?;
                     }
@@ -179,13 +193,18 @@ where
 
                         let text = Text::new(text.as_str(), Point::default());
 
-                        text.into_styled(
-                            TextStyleBuilder::new(Font8x16)
-                                .text_color(C::from(C::Raw::from_u32(Color::from("#f20b8e").data)))
-                                .build(),
-                        )
-                        .draw(&mut self.draw_target)
-                        .map_err(|_| MorphError::Backend("Could not draw text."))?;
+                        let mut style_builder = TextStyleBuilder::new(Font8x16);
+
+                        if let Some(style) = style {
+                            if let Some(color) = style.color {
+                                style_builder =
+                                    style_builder.text_color(C::from(C::Raw::from_u32(color.data)));
+                            }
+                        }
+
+                        text.into_styled(style_builder.build())
+                            .draw(&mut self.draw_target)
+                            .map_err(|_| MorphError::Backend("Could not draw text."))?;
                     }
                     crate::core::Drawable::Image => {
                         if widget.image.is_none() {

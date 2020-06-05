@@ -3,7 +3,7 @@ use heapless::{consts::*, String, Vec};
 
 use crate::{result::*, embedded_graphics::geometry::Size};
 
-use super::{Drawable, IntoStyle, State};
+use super::{Drawable, IntoStyle, State, Style};
 
 pub type WidgetId = u8;
 
@@ -68,6 +68,16 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
 
     pub fn id(&self) -> WidgetId {
         self.id
+    }
+
+    pub fn style(&self) -> Option<Style> {
+        if let Some(state) = &self.state {
+            if let Some(style) = &self.style {
+                return Some(style.into_style(state));
+            }
+        }
+
+        None
     }
 
     pub fn copy_state(&mut self, other: &Widget<Message, S>) {

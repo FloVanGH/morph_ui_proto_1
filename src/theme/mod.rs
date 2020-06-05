@@ -25,7 +25,7 @@ impl BaseStyle for Theme {
 fn primary_button_style(state: &State) -> Style {
     let mut style = Style::default();
 
-    style.border_width = Some(1);
+    style.border_width = Some(5);
     style.border_color = Some(Color::from(CYAN_COLOR));
 
     if let Some(is_pressed) = state.is_pressed {
@@ -42,7 +42,7 @@ fn primary_button_style(state: &State) -> Style {
 }
 
 impl IntoStyle for Theme {
-    fn into_style(self, state: &State) -> Style {
+    fn into_style(&self, state: &State) -> Style {
         match self {
             Theme::PrimaryButton => primary_button_style(state)
         }
