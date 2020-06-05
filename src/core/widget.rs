@@ -31,7 +31,7 @@ fn get_widget_id() -> MorphResult<WidgetId> {
 pub struct Widget<Message, C: 'static> where C: PixelColor + From<<C as PixelColor>::Raw>  {
     id: WidgetId,
     pub is_dirty: bool,
-    pub text: Option<String<U16>>,
+    pub text: Option<String<U64>>,
     pub on_tap: Option<Message>,
     pub layout_style: Style,
     pub drawables: Vec<Drawable<C>, U4>,

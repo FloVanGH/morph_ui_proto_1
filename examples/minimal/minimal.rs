@@ -14,11 +14,11 @@ where
                 .margin(4)
                 .child(
                     Button::new()
-                        .text("Tap me")
+                        .text("Tap me")?
                         .margin((0, 0, 8, 0))
                         .on_tap(Message::Tapped),
                 )?
-                .child(Label::new().text("Hello from morph."))?,
+                .child(Label::new().text("Hello from morph.")?)?,
         )?
         .start()
 }

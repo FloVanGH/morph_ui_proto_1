@@ -12,7 +12,7 @@ use crate::{
 #[derive(Debug, Clone)]
 pub struct Button<Message> {
     on_tap: Option<Message>,
-    text: String<U16>,
+    text: String<U64>,
     layout_style: Style
 }
 
@@ -31,9 +31,10 @@ impl<Message> Button<Message> {
         Self::default()
     }
 
-    pub fn text(mut self, text: impl Into<String<U16>>) -> Self {
-        self.text = text.into();
-        self
+    pub fn text(mut self, text: &str) -> MorphResult<Self> {
+        self.text.clear();
+        self.text.push_str(text).map_err(|_| MorphError::OutOfBounds("Could not set text to Label. Text is to long."))?;
+        Ok(self)
     }
 
     pub fn on_tap(mut self, message: Message) -> Self {

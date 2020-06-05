@@ -10,7 +10,7 @@ use crate::{
 
 #[derive(Debug, Clone)]
 pub struct Label {
-    text: String<U16>,
+    text: String<U64>,
     layout_style: Style,
 }
 
@@ -28,9 +28,10 @@ impl Label {
         Self::default()
     }
 
-    pub fn text(mut self, text: impl Into<String<U16>>) -> Self {
-        self.text = text.into();
-        self
+    pub fn text(mut self, text: &str) -> MorphResult<Self> {
+        self.text.clear();
+        self.text.push_str(text).map_err(|_| MorphError::OutOfBounds("Could not set text to Label. Text is to long."))?;
+        Ok(self)
     }
 
     pub fn margin(mut self, margin: impl Into<Thickness>) -> Self {
