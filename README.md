@@ -10,7 +10,7 @@ To include morph in your project, add this dependency
 line to your `Cargo.toml` file:
 
 ```text
-morpth = { git = "https://codeberg.org/morph/morph.git" }
+morph = { git = "https://codeberg.org/morph/morph.git" }
 ```
 
 ## Run examples on web
