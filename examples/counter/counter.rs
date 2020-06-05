@@ -28,7 +28,12 @@ impl View<Message> for Counter {
                     .margin((0, 0, 8, 0))
                     .on_tap(Message::Increment),
             )?
+            .child(
+                ctx,
+                Image::new(include_bytes!("../../assets/ferris.raw"), 86, 64)?.margin(4),
+            )?
             .child(ctx, Label::new().text(self.count)?)?
+          
             .into_result()
     }
 }

@@ -1,9 +1,7 @@
-use embedded_graphics::pixelcolor::PixelColor;
-
 use stretch::style::Style;
 use heapless::{consts::*, String, Vec};
 
-use crate::result::*;
+use crate::{result::*, embedded_graphics::geometry::Size};
 
 use super::Drawable;
 
@@ -33,9 +31,11 @@ pub struct Widget<Message>  {
     pub name: String<U8>,
     pub is_dirty: bool,
     pub text: Option<String<U64>>,
+    pub image: Option<&'static [u8]>,
     pub on_tap: Option<Message>,
     pub layout_style: Style,
     pub drawables: Vec<Drawable, U4>,
+    pub size: Size
 }
 
 impl<Message> Widget<Message> {
@@ -49,9 +49,11 @@ impl<Message> Widget<Message> {
             name: String::new(),
             is_dirty: true,
             text: None,
+            image: None,
             on_tap: None,
             layout_style: Style::default(),
             drawables: Vec::new(),
+            size: Size::default()
         })
     }
 

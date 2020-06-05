@@ -1,11 +1,11 @@
 use core::marker::PhantomData;
 
-use heapless::{consts::*, String};
+use heapless::{consts::*, String, Vec};
 
 pub use self::platform::log;
 
 use crate::{
-    core::{Context, View, Widget, WidgetId},
+    core::{Context, View, WidgetId},
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -93,7 +93,7 @@ where
             for i in 0..widget.drawables.len() {
                 match widget.drawables.get(i).unwrap().clone() {
                     crate::core::Drawable::Rectangle => {
-                        let rectangle = Rectangle::new(Point::new(0, 0), Point::new(50, 50));
+                        let rectangle = Rectangle::new(Point::new(0, 0), Point::new(100, 100));
 
                         rectangle
                             .into_styled(
@@ -147,8 +147,17 @@ where
                         .map_err(|_| MorphError::Backend("Could not draw text."))?;
                     }
                     crate::core::Drawable::Image => {
-                        let image_raw: ImageRawLE<C> =
-                            ImageRaw::new(include_bytes!("../../assets/ferris.raw"), 86, 64);
+                        if widget.image.is_none() {
+                            return Ok(());
+                        }
+
+                        log("image");
+
+                        let image_raw: ImageRawLE<C> = ImageRaw::new(
+                            widget.image.unwrap(),
+                            widget.size.width,
+                            widget.size.height,
+                        );
                         let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 8));
                         image
                             .draw(&mut self.draw_target)
