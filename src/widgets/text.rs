@@ -1,28 +1,34 @@
+use core::marker::PhantomData;
+
 use heapless::{consts::*, String};
-use stretch::style::Style;
+use stretch::style::Style as LayoutStyle;
 
 use crate::{
-    core::{Drawable, Widget},
+    core::{Drawable, BaseStyle, Widget},
     geometry::Thickness,
     result::*,
 };
 
 #[derive(Debug, Clone)]
-pub struct Label {
+pub struct Label<Message, S> {
     text: String<U64>,
-    layout_style: Style,
+    layout_style: LayoutStyle,
+    style: S,
+    _phantom: PhantomData<Message>
 }
 
-impl Default for Label {
+impl<Message, S> Default for Label<Message, S> where S: BaseStyle  {
     fn default() -> Self {
         Label {
             text: String::default(),
-            layout_style: Style::default(),
+            layout_style: LayoutStyle::default(),
+            style: S::default(),
+            _phantom: PhantomData::default()
         }
     }
 }
 
-impl Label {
+impl<Message, S> Label<Message, S>  where S: BaseStyle {
     pub fn new() -> Self {
         Self::default()
     }
@@ -39,9 +45,9 @@ impl Label {
     }
 }
 
-impl<Message> IntoResult<Widget<Message>> for Label
+impl<Message, S> IntoResult<Widget<Message, S>> for Label<Message, S> where S: BaseStyle
 {
-    fn into_result(self) -> MorphResult<Widget<Message>> {
+    fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::new()?;
         widget.name.push_str("Label").map_err(|_| MorphError::OutOfBounds("Could not set name for label."))?;
         widget.text = Some(self.text);

@@ -5,7 +5,7 @@ use stretch::{
 };
 
 use crate::{
-    core::{Drawable, Widget},
+    core::{Drawable, Widget, BaseStyle},
     embedded_graphics::geometry::Size,
     geometry::Thickness,
     result::*,
@@ -38,8 +38,8 @@ impl Image {
     }
 }
 
-impl<Message> IntoResult<Widget<Message>> for Image {
-    fn into_result(self) -> MorphResult<Widget<Message>> {
+impl<Message, S> IntoResult<Widget<Message, S>> for Image where S: BaseStyle {
+    fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::new()?;
         widget.size = self.size;
         widget

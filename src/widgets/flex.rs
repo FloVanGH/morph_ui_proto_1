@@ -1,7 +1,7 @@
 use stretch::style::Style;
 
 use crate::{
-    core::{Context, Widget, WidgetId, get_widget_id},
+    core::{get_widget_id, BaseStyle, Context, Widget, WidgetId},
     geometry::Thickness,
     result::*,
 };
@@ -16,17 +16,18 @@ impl Flex {
     pub fn new() -> MorphResult<Self> {
         Ok(Flex {
             id: get_widget_id()?,
-            layout_style: Style::default()
+            layout_style: Style::default(),
         })
     }
 }
 
 impl Flex {
-    pub fn child<Message>(
+    pub fn child<Message, S>(
         self,
-        context: &mut Context<Message>,
-        child: impl IntoResult<Widget<Message>>,
-    ) -> MorphResult<Self> {
+        context: &mut Context<Message, S>,
+        child: impl IntoResult<Widget<Message, S>>,
+    ) -> MorphResult<Self> where S: BaseStyle
+    { 
         context.push(Some(self.id), child.into_result()?)?;
         Ok(self)
     }
@@ -37,10 +38,14 @@ impl Flex {
     }
 }
 
-impl<Message> IntoResult<Widget<Message>> for Flex {
-    fn into_result(self) -> MorphResult<Widget<Message>> {
+impl<Message, S> IntoResult<Widget<Message, S>> for Flex where S: BaseStyle
+{
+    fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::from_id(self.id)?;
-        widget.name.push_str("Flex").map_err(|_| MorphError::OutOfBounds("Could not set name for flex."))?;
+        widget
+            .name
+            .push_str("Flex")
+            .map_err(|_| MorphError::OutOfBounds("Could not set name for flex."))?;
         widget.layout_style = self.layout_style;
         // widget.children = self.children;
         Ok(widget)

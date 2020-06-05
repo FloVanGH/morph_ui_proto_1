@@ -1,9 +1,9 @@
-use stretch::style::Style;
+use stretch::style::Style as LayoutStyle;
 use heapless::{consts::*, String, Vec};
 
 use crate::{result::*, embedded_graphics::geometry::Size};
 
-use super::Drawable;
+use super::{Drawable, IntoStyle, State};
 
 pub type WidgetId = u8;
 
@@ -30,20 +30,22 @@ pub (crate) fn reset_widget_id() {
     unsafe { WIDGET_ID = 0; }
 }
 
-pub struct Widget<Message>  {
+
+pub struct Widget<Message, S> where S: IntoStyle {
     id: WidgetId,
     pub name: String<U8>,
     pub is_dirty: bool,
     pub text: Option<String<U64>>,
     pub image: Option<&'static [u8]>,
     pub on_tap: Option<Message>,
-    pub layout_style: Style,
+    pub layout_style: LayoutStyle,
     pub drawables: Vec<Drawable, U4>,
-    pub is_pressed: Option<bool>,
-    pub size: Size
+    pub size: Size,
+    pub style: Option<S>,
+    pub state: Option<State>,
 }
 
-impl<Message> Widget<Message> {
+impl<Message, S> Widget<Message, S> where S: IntoStyle {
     pub fn new() -> MorphResult<Self> {
        Self::from_id(get_widget_id()?)
     }
@@ -56,10 +58,11 @@ impl<Message> Widget<Message> {
             text: None,
             image: None,
             on_tap: None,
-            layout_style: Style::default(),
+            layout_style: LayoutStyle::default(),
             drawables: Vec::new(),
-            is_pressed: None,
-            size: Size::default()
+            size: Size::default(),
+            style: None,
+            state: None
         })
     }
 
@@ -67,11 +70,11 @@ impl<Message> Widget<Message> {
         self.id
     }
 
-    pub fn copy_state(&mut self, other: &Widget<Message>) {
-        if self.id != other.id || self.name != other.name {
+    pub fn copy_state(&mut self, other: &Widget<Message, S>) {
+        if self.id != other.id || self.name != other.name || other.state.is_none() {
             return;
         }
 
-        self.is_pressed = other.is_pressed;
+        self.state = other.state.clone();
     }
 }

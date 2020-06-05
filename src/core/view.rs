@@ -1,8 +1,8 @@
 use crate::result::*;
 
-use super::{Widget, Context};
+use super::{Widget, Context, IntoStyle};
 
-pub trait View<Message> {
+pub trait View<Message, S> {
     fn update(&mut self, message: Message);
-    fn view(&self, ctx: &mut Context<Message>) -> MorphResult<Widget<Message>>;
+    fn view(&self, ctx: &mut Context<Message, S>) -> MorphResult<Widget<Message, S>> where S: IntoStyle;
 }

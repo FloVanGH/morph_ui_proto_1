@@ -5,5 +5,6 @@ pub use crate::{
     result::*,
     embedded_graphics::prelude::*,
     embedded_graphics,
-    widgets::*
+    widgets::*,
+    theme::Theme
 };

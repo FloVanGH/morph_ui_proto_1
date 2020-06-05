@@ -5,7 +5,7 @@ use heapless::{consts::*, String, Vec};
 pub use self::platform::log;
 
 use crate::{
-    core::{Context, View, WidgetId, reset_widget_id},
+    core::{reset_widget_id, Context, View, WidgetId, IntoStyle},
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -18,7 +18,17 @@ use crate::{
     graphics::Color,
     platform,
     result::*,
+    theme::Theme,
 };
+
+// /// Get shell with default theme
+// pub fn shell<D: DrawTarget<C> + 'static, Message, C, V>(draw_target: D) -> Shell<Message, D, C, V, Theme>
+// where
+//     C: PixelColor + From<<C as PixelColor>::Raw>,
+//     V: View<Message, Theme>,
+// {
+//     Shell::new(draw_target)
+// }
 
 // /// Creates platform specific shell with a platform specific render target.
 // pub fn shell() -> MorphResult<Shell<DrawTarget, platform::RenderTarget, platform::RenderContext>> {
@@ -29,23 +39,25 @@ use crate::{
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
-pub struct Shell<Message: 'static, D: DrawTarget<C> + 'static, C: 'static, V: 'static>
+pub struct Shell<Message: 'static, D: DrawTarget<C> + 'static, C: 'static, V: 'static, S: 'static>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
-    V: View<Message>,
+    V: View<Message, S>,
+    S: IntoStyle
 {
     is_running: bool,
     render: bool,
     draw_target: D,
-    context: Context<Message>,
+    context: Context<Message, S>,
     view: Option<V>,
     _phantom: PhantomData<C>,
 }
 
-impl<Message, D: DrawTarget<C>, C, V> Shell<Message, D, C, V>
+impl<Message, D: DrawTarget<C>, C, V, S> Shell<Message, D, C, V, S>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
-    V: View<Message>,
+    V: View<Message, S>,
+    S: IntoStyle
 {
     /// Creates a new shell with a given render target.
     pub fn new(draw_target: D) -> Self {
@@ -59,11 +71,11 @@ where
         }
     }
 
-    // Copy states from old tree to new. 
+    // Copy states from old tree to new.
     //
     // ! This works only if the structure of the widget tree doesn't change.!
     // ! If this will changed in the future this logic must also be changed!
-    fn copy_states(&mut self, id: WidgetId, new_ctx: &mut Context<Message>) {
+    fn copy_states(&mut self, id: WidgetId, new_ctx: &mut Context<Message, S>) {
         if let Some(widget) = self.context.get_mut(id) {
             if let Some(new_widget) = &mut new_ctx.get_mut(id) {
                 new_widget.copy_state(widget);
@@ -256,8 +268,8 @@ where
                 return Ok(());
             }
             self.drain_events()?;
-            self.update()?;
             self.build()?;
+            self.update()?;
             self.draw()?;
 
             Ok(())

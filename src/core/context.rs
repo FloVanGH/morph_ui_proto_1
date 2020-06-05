@@ -2,20 +2,20 @@ use heapless::{consts::*, FnvIndexMap, Vec};
 
 use crate::result::*;
 
-use super::{Widget, WidgetId};
+use super::{Widget, WidgetId, IntoStyle};
 
 pub static MAXIMUM_WIDGETS: &'static str =
     "Maximum of widgets is reached. Could not add more widgets to context.";
 
 #[derive(Default)]
-pub struct Context<Message: 'static> {
-    widgets: FnvIndexMap<WidgetId, Widget<Message>, U16>,
+pub struct Context<Message: 'static, S> where S: IntoStyle {
+    widgets: FnvIndexMap<WidgetId, Widget<Message, S>, U16>,
     parent: FnvIndexMap<WidgetId, WidgetId, U16>,
     root: Option<WidgetId>,
     children: FnvIndexMap<WidgetId, Vec<WidgetId, U8>, U16>,
 }
 
-impl<Message> Context<Message> {
+impl<Message, S> Context<Message, S> where S: IntoStyle {
     pub fn new() -> Self {
         Context {
             widgets: FnvIndexMap::new(),
@@ -25,7 +25,7 @@ impl<Message> Context<Message> {
         }
     }
 
-    pub fn push(&mut self, parent: Option<WidgetId>, widget: Widget<Message>) -> MorphResult<()> {
+    pub fn push(&mut self, parent: Option<WidgetId>, widget: Widget<Message, S>) -> MorphResult<()> {
         let id = widget.id();
 
         if parent.is_none() {
@@ -86,15 +86,15 @@ impl<Message> Context<Message> {
         None
     }
 
-    pub fn get(&self, id: WidgetId) -> Option<&Widget<Message>> {
+    pub fn get(&self, id: WidgetId) -> Option<&Widget<Message, S>> {
         self.widgets.get(&id)
     }
 
-    pub fn get_mut(&mut self, id: WidgetId) -> Option<&mut Widget<Message>> {
+    pub fn get_mut(&mut self, id: WidgetId) -> Option<&mut Widget<Message, S>> {
         self.widgets.get_mut(&id)
     }
 
-    pub fn remove(&mut self, id: WidgetId) -> Option<Widget<Message>> {
+    pub fn remove(&mut self, id: WidgetId) -> Option<Widget<Message, S>> {
         let _ = self.children.remove(&id);
         let _ = self.parent.remove(&id);
         self.widgets.remove(&id)

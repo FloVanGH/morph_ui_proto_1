@@ -3,6 +3,7 @@ use stretch::{
     style::Dimension,
 };
 
+#[derive(Debug, Copy, Clone)]
 pub struct Thickness {
     pub left: i32,
     pub top: i32,

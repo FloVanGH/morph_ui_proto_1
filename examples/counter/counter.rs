@@ -9,7 +9,7 @@ pub struct Counter {
     count: u32,
 }
 
-impl View<Message> for Counter {
+impl View<Message, Theme> for Counter {
     fn update(&mut self, message: Message) {
         match message {
             Message::Increment => {
@@ -18,7 +18,7 @@ impl View<Message> for Counter {
         }
     }
 
-    fn view(&self, ctx: &mut Context<Message>) -> MorphResult<Widget<Message>> {
+    fn view(&self, ctx: &mut Context<Message, Theme>) -> MorphResult<Widget<Message, Theme>> {
         Flex::new()?
             .margin(4)
             .child(
