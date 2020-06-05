@@ -1,10 +1,13 @@
 use heapless::{consts::*, String, Vec};
-use stretch::style::Style;
+use stretch::{
+    geometry::Size as LayoutSize,
+    style::{Dimension, Style},
+};
 
 use crate::{
     core::{Drawable, Widget},
-    geometry::Thickness,
     embedded_graphics::geometry::Size,
+    geometry::Thickness,
     result::*,
 };
 
@@ -12,18 +15,22 @@ use crate::{
 pub struct Image {
     layout_style: Style,
     size: Size,
-    data: &'static [u8]
+    data: &'static [u8],
 }
 
 impl Image {
     pub fn new(data: &'static [u8], width: u32, height: u32) -> MorphResult<Self> {
+        let mut style = Style::default();
+        style.size = LayoutSize {
+            width: Dimension::Points(width as f32),
+            height: Dimension::Points(height as f32),
+        };
         Ok(Image {
-            layout_style: Style::default(),
+            layout_style: style,
             data,
-            size: Size::new(width, height)
+            size: Size::new(width, height),
         })
     }
-
 
     pub fn margin(mut self, margin: impl Into<Thickness>) -> Self {
         self.layout_style.margin = margin.into().into();
@@ -31,12 +38,14 @@ impl Image {
     }
 }
 
-impl<Message> IntoResult<Widget<Message>> for Image
-{
+impl<Message> IntoResult<Widget<Message>> for Image {
     fn into_result(self) -> MorphResult<Widget<Message>> {
         let mut widget = Widget::new()?;
         widget.size = self.size;
-        widget.name.push_str("Image").map_err(|_| MorphError::OutOfBounds("Could not set name for label."))?;
+        widget
+            .name
+            .push_str("Image")
+            .map_err(|_| MorphError::OutOfBounds("Could not set name for label."))?;
         widget.image = Some(self.data);
         widget
             .drawables
