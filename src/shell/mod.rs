@@ -3,7 +3,7 @@ use core::marker::PhantomData;
 pub use self::platform::log;
 
 use crate::{
-    core::{Context, Widget, WidgetId},
+    core::{Context, Widget, WidgetId, View},
     embedded_graphics::{
         fonts::{Font8x16, Text},
         image::{Image, ImageRaw, ImageRawLE},
@@ -27,20 +27,23 @@ use crate::{
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
-pub struct Shell<Message: 'static, D: DrawTarget<C> + 'static, C: 'static>
+pub struct Shell<Message: 'static, D: DrawTarget<C> + 'static, C: 'static, V: 'static>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
+    V: View<Message>
 {
     is_running: bool,
     render: bool,
     draw_target: D,
     context: Context<Message>,
+    view: Option<V>,
     _phantom: PhantomData<C>,
 }
 
-impl<Message, D: DrawTarget<C> + 'static, C: 'static> Shell<Message, D, C>
+impl<Message, D: DrawTarget<C>, C, V> Shell<Message, D, C, V>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
+    V: View<Message>
 {
     /// Creates a new shell with a given render target.
     pub fn new(draw_target: D) -> Self {
@@ -49,17 +52,26 @@ where
             render: true,
             draw_target,
             context: Context::new(),
+            view: None,
             _phantom: PhantomData::default(),
         }
     }
 
-    pub fn view<F: Fn(&mut Context<Message>) -> MorphResult<Widget<Message>> + 'static>(
-        mut self,
-        build_fn: F,
-    ) -> MorphResult<Self> {
-        let root = build_fn(&mut self.context)?;
-        self.context.push(None, root)?;
-        Ok(self)
+    fn init(&mut self) -> MorphResult<()> {
+        let mut ctx = Context::new();
+        if let Some(view) = &mut self.view {
+            let root = view.view(&mut ctx)?;
+            ctx.push(None, root)?;
+        }
+
+        self.context = ctx;
+
+        Ok(())
+    }
+
+    pub fn view(mut self, view: V) -> Self {
+        self.view = Some(view);
+        self
     }
 
     // Drain events.
@@ -90,7 +102,7 @@ where
 
     // Draws everything.
     fn draw(&mut self) -> MorphResult<()> {
-        if self.render {
+        if self.render {     
             if let Some(root) = self.context.root() {
                 self.int_draw(root)?;
             }
@@ -138,6 +150,7 @@ where
             }
             self.drain_events()?;
             self.update()?;
+            self.init()?;
             self.draw()?;
 
             Ok(())

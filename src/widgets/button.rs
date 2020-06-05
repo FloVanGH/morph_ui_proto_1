@@ -30,9 +30,9 @@ impl<Message> Button<Message> {
         Self::default()
     }
 
-    pub fn text(mut self, text: &str) -> MorphResult<Self> {
+    pub fn text(mut self, text: impl Into<String<U64>>) -> MorphResult<Self> {
         self.text.clear();
-        self.text.push_str(text).map_err(|_| MorphError::OutOfBounds("Could not set text to Label. Text is to long."))?;
+        self.text.push_str(text.into().as_str()).map_err(|_| MorphError::OutOfBounds("Could not set text to Label. Text is to long."))?;
         Ok(self)
     }
 
