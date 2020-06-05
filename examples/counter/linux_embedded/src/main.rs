@@ -7,8 +7,8 @@ use st7735::fonts::font57::Font57;
 use st7735::Orientation;
 use st7735::ST7734;
 
-#[path = "../../minimal.rs"]
-mod minimal;
+#[path = "../../counter.rs"]
+mod counter;
 
 fn main() {
     let mut spi = Spidev::open("/dev/spidev0.0").expect("error initializing SPI");
@@ -51,5 +51,5 @@ fn main() {
     );
     display.draw_line(0, 110, 128, 130, &Color::from_default(DefaultColor::Green));
 
-    minimal::start_example();
+    counter::start_example();
 }

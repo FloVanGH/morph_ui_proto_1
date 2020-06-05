@@ -1,8 +1,8 @@
 #![no_std]
 #![no_main]
 
-#[path = "../../minimal.rs"]
-mod minimal;
+#[path = "../../counter.rs"]
+mod counter;
 
 use cortex_m_rt as rt;
 use stm32f1xx_hal as hal;
@@ -73,7 +73,7 @@ fn main() -> ! {
     disp.init(&mut delay).unwrap();
     disp.set_orientation(&Orientation::Landscape).unwrap();
 
-    minimal::start_example(disp);
+    counter::start_example(disp);
 
     loop {}
 }
