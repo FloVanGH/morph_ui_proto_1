@@ -33,9 +33,9 @@ impl<Message, S> Label<Message, S>  where S: BaseStyle {
         Self::default()
     }
 
-    pub fn text(mut self, text: impl Into<&'static str>) -> MorphResult<Self> {
+    pub fn text(mut self, text: impl Into<&'static str>) -> Self {
         self.text = text.into();
-        Ok(self)
+        self
     }
 
     pub fn margin(mut self, margin: impl Into<Thickness>) -> Self {
@@ -49,7 +49,7 @@ impl<Message, S> IntoResult<Widget<Message, S>> for Label<Message, S> where S: B
     fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::new()?;
         widget.text = Some(self.text);
-        widget.name.push_str("Label").map_err(|_| MorphError::OutOfBounds("Could not set name for label."))?;
+        widget.name = "Label";
         // widget.text = Some(self.text);
         widget
             .drawables

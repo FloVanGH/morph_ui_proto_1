@@ -5,6 +5,7 @@
 mod counter;
 
 use cortex_m_rt::{entry, exception, ExceptionFrame};
+pub use morph::theme::binary::BinaryTheme as Theme;
 use morph::{
     embedded_graphics::{
         fonts::{Font6x8, Text},
@@ -55,30 +56,17 @@ fn main() -> ! {
         1000,
     );
 
-    morph::log("hier");
-
     let mut disp: GraphicsMode<_> = Builder::new().connect_i2c(i2c).into();
 
-    // disp.init().unwrap();
-    // disp.flush().unwrap();
+    let mut shell = counter::shell(Sh1106Backend::new(disp));
 
-    // Text::new("test!", Point::zero())
-    //     .into_styled(TextStyle::new(Font6x8, BinaryColor::On))
-    //     .draw(&mut disp)
-    //     .unwrap();
+    // loop {
+    let result = shell.run();
 
-    // // Text::new("Hello Rust!", Point::new(0, 16))
-    // //     .into_styled(TextStyle::new(Font6x8, BinaryColor::On))
-    // //     .draw(&mut disp)
-    // //     .unwrap();
-
-    // disp.flush().unwrap();
-
-    counter::start_example(Sh1106Backend::new(disp));
-
-    // disp.flush().unwrap();
-
-    loop {}
+    if let Err(err) = result {
+        panic!("{:?}", err);
+    }
+    // }
 }
 
 #[exception]

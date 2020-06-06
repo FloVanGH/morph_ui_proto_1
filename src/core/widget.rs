@@ -33,17 +33,16 @@ pub (crate) fn reset_widget_id() {
 
 pub struct Widget<Message, S> where S: IntoStyle {
     id: WidgetId,
-    pub name: String<U8>,
+    pub name: &'static str,
     pub is_dirty: bool,
     pub text: Option<&'static str>,
-    // pub text: Option<String<U64>>,
     pub image: Option<&'static [u8]>,
     pub on_tap: Option<Message>,
     // pub layout_style: LayoutStyle,
     pub drawables: Vec<Drawable, U4>,
     pub size: Size,
     pub style: Option<S>,
-    // pub state: Option<State>,
+    pub state: Option<State>,
 }
 
 impl<Message, S> Widget<Message, S> where S: IntoStyle {
@@ -54,7 +53,7 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
     pub fn from_id(id: WidgetId) -> MorphResult<Self> {
         Ok(Widget {
             id,
-            name: String::new(),
+            name: "",
             is_dirty: true,
             text: None,
             image: None,
@@ -63,7 +62,7 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
             drawables: Vec::new(),
             size: Size::default(),
             style: None,
-            // state: None
+            state: None
         })
     }
 
@@ -71,15 +70,15 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
         self.id
     }
 
-    // pub fn style(&self) -> Option<Style> {
-    //     if let Some(state) = &self.state {
-    //         if let Some(style) = &self.style {
-    //             return Some(style.into_style(state));
-    //         }
-    //     }
+    pub fn style(&self) -> Option<Style> {
+        if let Some(state) = &self.state {
+            if let Some(style) = &self.style {
+                return Some(style.into_style(state));
+            }
+        }
 
-    //     None
-    // }
+        None
+    }
 
     // pub fn copy_state(&mut self, other: &Widget<Message, S>) {
     //     if self.id != other.id || self.name != other.name || other.state.is_none() {

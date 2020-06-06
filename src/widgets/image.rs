@@ -42,10 +42,7 @@ impl<Message, S> IntoResult<Widget<Message, S>> for Image where S: BaseStyle {
     fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::new()?;
         widget.size = self.size;
-        widget
-            .name
-            .push_str("Image")
-            .map_err(|_| MorphError::OutOfBounds("Could not set name for label."))?;
+        widget.name = "Image";
         widget.image = Some(self.data);
         widget
             .drawables

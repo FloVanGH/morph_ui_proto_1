@@ -12,5 +12,6 @@ mod common;
 /// Outputs a message to the console.
 pub fn log(msg: &str) {
     hstdout_str(msg).unwrap();
+    hstdout_str("\n").unwrap();
 }
 

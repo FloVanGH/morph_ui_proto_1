@@ -12,7 +12,7 @@ use crate::{
 #[derive(Debug, Clone)]
 pub struct Button<Message, S> {
     on_tap: Option<Message>,
-    text: String<U64>,
+    text: &'static str,
     layout_style: LayoutStyle,
     style: S,
 }
@@ -24,7 +24,7 @@ where
     fn default() -> Self {
         Button {
             on_tap: None,
-            text: String::default(),
+            text: "",
             layout_style: LayoutStyle::default(),
             style: S::primary_button(),
         }
@@ -45,12 +45,9 @@ where
         Self::default()
     }
 
-    pub fn text(mut self, text: impl Into<String<U64>>) -> MorphResult<Self> {
-        self.text.clear();
-        self.text.push_str(text.into().as_str()).map_err(|_| {
-            MorphError::OutOfBounds("Could not set text to Label. Text is to long.")
-        })?;
-        Ok(self)
+    pub fn text(mut self, text: &'static str) -> Self {
+        self.text = text;
+        self
     }
 
     pub fn on_tap(mut self, message: Message) -> Self {
@@ -71,14 +68,11 @@ where
     fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::new()?;
         widget.style = Some(self.style);
-        widget
-            .name
-            .push_str("Button")
-            .map_err(|_| MorphError::OutOfBounds("Could not set name for button."))?;
-        // widget.state = Some(State {
-        //     is_pressed: Some(false),
-        // });
-        // widget.text = Some(self.text);
+        widget.name = "Button";
+        widget.state = Some(State {
+            is_pressed: Some(false),
+        });
+        widget.text = Some(self.text);
         widget
             .drawables
             .push(Drawable::Rectangle)

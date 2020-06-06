@@ -136,32 +136,33 @@ where
     pub fn int_draw(&mut self, id: WidgetId) -> MorphResult<()> {
         if let Some(widget) = self.context.get(id) {
             self.backend.init();
-            log(widget.name.as_str());
+            log(widget.name);
 
-            // let style = widget.style();
+            let style = widget.style();
 
             for i in 0..widget.drawables.len() {
                 match widget.drawables.get(i).unwrap().clone() {
                     crate::core::Drawable::Rectangle => {
-                        let rectangle = Rectangle::new(Point::new(0, 0), Point::new(100, 100));
+                        log("rect");
+                        let rectangle = Rectangle::new(Point::new(0, 0), Point::new(50, 30));
 
                         let mut style_builder = PrimitiveStyleBuilder::new();
 
-                        // if let Some(style) = style {
-                        //     if let Some(background) = style.background {
-                        //         style_builder = style_builder
-                        //             .fill_color(C::from(C::Raw::from_u32(background.data)));
-                        //     }
+                        if let Some(style) = style {
+                            if let Some(background) = style.background {
+                                style_builder = style_builder
+                                    .fill_color(C::from(C::Raw::from_u32(background.data)));
+                            }
 
-                        //     if let Some(border_color) = style.border_color {
-                        //         style_builder = style_builder
-                        //             .stroke_color(C::from(C::Raw::from_u32(border_color.data)));
-                        //     }
+                            if let Some(border_color) = style.border_color {
+                                style_builder = style_builder
+                                    .stroke_color(C::from(C::Raw::from_u32(border_color.data)));
+                            }
 
-                        //     if let Some(border_width) = style.border_width {
-                        //         style_builder = style_builder.stroke_width(border_width);
-                        //     }
-                        // }
+                            if let Some(border_width) = style.border_width {
+                                style_builder = style_builder.stroke_width(border_width);
+                            }
+                        }
 
                         rectangle
                             .into_styled(style_builder.build())
@@ -220,8 +221,6 @@ where
                             return Ok(());
                         }
 
-                        log("image");
-
                         let image_raw: ImageRawLE<C> = ImageRaw::new(
                             widget.image.unwrap(),
                             widget.size.width,
@@ -235,7 +234,7 @@ where
                 }
             }
 
-            log("end");
+            log("end render");
             self.backend.flush();
         };
 
@@ -256,35 +255,6 @@ where
             if let Some(root) = self.context.root() {
                 self.int_draw(root)?;
             }
-
-            // let color = Color::from("#000000");
-            // let style = PrimitiveStyleBuilder::new()
-            //     .fill_color(C::from(C::Raw::from_u32(color.data)))
-            //     .build();
-            // let black_backdrop =
-            //     Rectangle::new(Point::new(0, 0), Point::new(160, 128)).into_styled(style);
-            // black_backdrop
-            //     .draw(self.backend.draw_target())
-            //     .map_err(|_| MorphError::Backend(""))?;
-
-            // let color = Color::from("#ffffff");
-            // // Create a new text style
-            // let style = TextStyleBuilder::new(Font8x16)
-            //     .text_color(C::from(C::Raw::from_u32(color.data)))
-            //     .build();
-
-            // // Create a text at position (20, 30) and draw it using the previously defined style
-            // Text::new("Hello Rust!", Point::new(20, 100))
-            //     .into_styled(style)
-            //     .draw(self.backend.draw_target())
-            //     .map_err(|_| MorphError::Backend(""))?;
-
-            // let image_raw: ImageRawLE<C> =
-            //     ImageRaw::new(include_bytes!("../../assets/ferris.raw"), 86, 64);
-            // let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 8));
-            // image
-            //     .draw(self.backend.draw_target())
-            //     .map_err(|_| MorphError::Backend(""))?;
             self.render = false;
         }
 
@@ -292,18 +262,19 @@ where
     }
 
     /// Start and run the shell.
-    pub fn start(mut self) -> MorphResult<()> {
+    pub fn run(&mut self) -> MorphResult<bool> {
         // platform::main_loop(move |running| {
             if !self.is_running {
                 // *running = false;
-                return Ok(());
+                return Ok(false);
             }
             self.drain_events()?;
             self.build()?;
             self.update()?;
             self.draw()?;
+            log("end");
 
-            Ok(())
+            Ok(true)
         // })
     }
 }

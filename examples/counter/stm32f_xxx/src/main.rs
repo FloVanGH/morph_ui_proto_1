@@ -73,7 +73,7 @@ fn main() -> ! {
     disp.init(&mut delay).unwrap();
     disp.set_orientation(&Orientation::Landscape).unwrap();
 
-    counter::start_example(disp);
+    counter::start_example<morph::theme::BinaryTheme>(disp);
 
     loop {}
 }

@@ -6,5 +6,4 @@ pub use crate::{
     embedded_graphics::prelude::*,
     embedded_graphics,
     widgets::*,
-    theme::Theme
 };

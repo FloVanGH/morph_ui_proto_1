@@ -13,6 +13,7 @@ cortex-m = "0.6.0"
 cortex-m-rt = "0.6.10"
 panic-semihosting = "0.5.2"
 morph = { path = "../../../", default_features = false }
+heapless = "0.5.5"
 
 [profile.release]
 opt-level = "z"
