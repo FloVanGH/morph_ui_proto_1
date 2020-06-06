@@ -238,7 +238,6 @@ where
             }
 
             log("end render");
-            self.backend.flush();
         };
 
         if let Some(children_len) = self.context.children_len(id) {
@@ -249,6 +248,7 @@ where
             }
         }
 
+        self.backend.flush();
         Ok(())
     }
 
