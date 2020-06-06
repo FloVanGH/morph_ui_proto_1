@@ -2,6 +2,10 @@ use cortex_m_semihosting::export::hstdout_str;
 
 pub use self::common::main_loop;
 
+pub use self::sh1106::*;
+
+mod sh1106;
+
 #[path = "../common/mod.rs"]
 mod common;
 

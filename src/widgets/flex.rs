@@ -46,7 +46,7 @@ impl<Message, S> IntoResult<Widget<Message, S>> for Flex where S: BaseStyle
             .name
             .push_str("Flex")
             .map_err(|_| MorphError::OutOfBounds("Could not set name for flex."))?;
-        widget.layout_style = self.layout_style;
+        // widget.layout_style = self.layout_style;
         // widget.children = self.children;
         Ok(widget)
     }

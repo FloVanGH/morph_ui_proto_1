@@ -51,7 +51,7 @@ impl<Message, S> IntoResult<Widget<Message, S>> for Image where S: BaseStyle {
             .drawables
             .push(Drawable::Image)
             .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to label."))?;
-        widget.layout_style = self.layout_style;
+        // widget.layout_style = self.layout_style;
         Ok(widget)
     }
 }

@@ -16,7 +16,7 @@ pub use embedded_graphics;
 pub mod core;
 pub mod geometry;
 pub mod graphics;
-mod platform;
+pub mod platform;
 pub mod shell;
 pub mod theme;
 pub mod prelude;
@@ -24,3 +24,5 @@ pub mod result;
 pub mod widgets;
 
 // todo: Inject static Theme type that provides style like button styles to read current properties dependent on the state.
+
+// maybe Counter<Message, Theme> could be removed

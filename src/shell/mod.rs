@@ -21,6 +21,10 @@ use crate::{
     theme::Theme,
 };
 
+pub use self::backend::*;
+
+mod backend;
+
 // /// Get shell with default theme
 // pub fn shell<D: DrawTarget<C> + 'static, Message, C, V>(draw_target: D) -> Shell<Message, D, C, V, Theme>
 // where
@@ -39,7 +43,7 @@ use crate::{
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
-pub struct Shell<Message: 'static, D: DrawTarget<C> + 'static, C: 'static, V: 'static, S: 'static>
+pub struct Shell<Message: 'static, B: Backend<D, C>, D: DrawTarget<C> + 'static, C: 'static, V: 'static, S: 'static>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
     V: View<Message, S>,
@@ -47,27 +51,29 @@ where
 {
     is_running: bool,
     render: bool,
-    draw_target: D,
+    backend: B,
     context: Context<Message, S>,
     view: Option<V>,
     _phantom: PhantomData<C>,
+    _phantom_d: PhantomData<D>
 }
 
-impl<Message, D: DrawTarget<C>, C, V, S> Shell<Message, D, C, V, S>
+impl<Message, B: Backend<D, C>, D: DrawTarget<C>, C, V, S> Shell<Message, B, D, C, V, S>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
     V: View<Message, S>,
     S: IntoStyle,
 {
     /// Creates a new shell with a given render target.
-    pub fn new(draw_target: D) -> Self {
+    pub fn new(backend: B) -> Self {
         Shell {
             is_running: true,
             render: true,
-            draw_target,
+            backend,
             context: Context::new(),
             view: None,
             _phantom: PhantomData::default(),
+            _phantom_d: PhantomData::default()
         }
     }
 
@@ -78,7 +84,7 @@ where
     fn copy_states(&mut self, id: WidgetId, new_ctx: &mut Context<Message, S>) {
         if let Some(widget) = self.context.get_mut(id) {
             if let Some(new_widget) = &mut new_ctx.get_mut(id) {
-                new_widget.copy_state(widget);
+                // new_widget.copy_state(widget);
             }
         }
 
@@ -129,9 +135,10 @@ where
 
     pub fn int_draw(&mut self, id: WidgetId) -> MorphResult<()> {
         if let Some(widget) = self.context.get(id) {
+            self.backend.init();
             log(widget.name.as_str());
 
-            let style = widget.style();
+            // let style = widget.style();
 
             for i in 0..widget.drawables.len() {
                 match widget.drawables.get(i).unwrap().clone() {
@@ -140,32 +147,32 @@ where
 
                         let mut style_builder = PrimitiveStyleBuilder::new();
 
-                        if let Some(style) = style {
-                            if let Some(background) = style.background {
-                                style_builder = style_builder
-                                    .fill_color(C::from(C::Raw::from_u32(background.data)));
-                            }
+                        // if let Some(style) = style {
+                        //     if let Some(background) = style.background {
+                        //         style_builder = style_builder
+                        //             .fill_color(C::from(C::Raw::from_u32(background.data)));
+                        //     }
 
-                            if let Some(border_color) = style.border_color {
-                                style_builder = style_builder
-                                    .stroke_color(C::from(C::Raw::from_u32(border_color.data)));
-                            }
+                        //     if let Some(border_color) = style.border_color {
+                        //         style_builder = style_builder
+                        //             .stroke_color(C::from(C::Raw::from_u32(border_color.data)));
+                        //     }
 
-                            if let Some(border_width) = style.border_width {
-                                style_builder = style_builder.stroke_width(border_width);
-                            }
-                        }
+                        //     if let Some(border_width) = style.border_width {
+                        //         style_builder = style_builder.stroke_width(border_width);
+                        //     }
+                        // }
 
                         rectangle
                             .into_styled(style_builder.build())
-                            .draw(&mut self.draw_target)
+                            .draw(self.backend.draw_target())
                             .map_err(|_| MorphError::Backend("Could not draw rectangle."))?;
                     }
                     crate::core::Drawable::Line => {
                         let line = Line::default();
 
                         line.into_styled(PrimitiveStyleBuilder::new().build())
-                            .draw(&mut self.draw_target)
+                            .draw(self.backend.draw_target())
                             .map_err(|_| MorphError::Backend("Could not draw line."))?;
                     }
                     crate::core::Drawable::Circle => {
@@ -173,7 +180,7 @@ where
 
                         circle
                             .into_styled(PrimitiveStyleBuilder::new().build())
-                            .draw(&mut self.draw_target)
+                            .draw(self.backend.draw_target())
                             .map_err(|_| MorphError::Backend("Could not draw circle."))?;
                     }
                     crate::core::Drawable::Triangle => {
@@ -181,30 +188,32 @@ where
 
                         triangle
                             .into_styled(PrimitiveStyleBuilder::new().build())
-                            .draw(&mut self.draw_target)
+                            .draw(self.backend.draw_target())
                             .map_err(|_| MorphError::Backend("Could not draw triangle."))?;
                     }
                     crate::core::Drawable::Text => {
-                        let text = if let Some(text) = &widget.text {
-                            text.clone()
-                        } else {
-                            String::default()
-                        };
+                       if let Some(text) = widget.text {
+                            let text = Text::new(text, Point::default());
 
-                        let text = Text::new(text.as_str(), Point::default());
-
-                        let mut style_builder = TextStyleBuilder::new(Font8x16);
-
-                        if let Some(style) = style {
-                            if let Some(color) = style.color {
-                                style_builder =
-                                    style_builder.text_color(C::from(C::Raw::from_u32(color.data)));
-                            }
-                        }
-
-                        text.into_styled(style_builder.build())
-                            .draw(&mut self.draw_target)
+                            text.into_styled( TextStyleBuilder::new(Font8x16).text_color(C::from(C::Raw::from_u32(Color::from("#ffffff").data))).build())
+                            .draw(self.backend.draw_target())
                             .map_err(|_| MorphError::Backend("Could not draw text."))?;
+                        } 
+
+                        // let text = Text::new(text.as_str(), Point::default());
+
+                        // let mut style_builder = TextStyleBuilder::new(Font8x16);
+
+                        // if let Some(style) = style {
+                        //     if let Some(color) = style.color {
+                        //         style_builder =
+                        //             style_builder.text_color(C::from(C::Raw::from_u32(color.data)));
+                        //     }
+                        // }
+
+                        // text.into_styled( TextStyleBuilder::new(Font8x16).build())
+                        //     .draw(self.backend.draw_target())
+                        //     .map_err(|_| MorphError::Backend("Could not draw text."))?;
                     }
                     crate::core::Drawable::Image => {
                         if widget.image.is_none() {
@@ -220,11 +229,14 @@ where
                         );
                         let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 8));
                         image
-                            .draw(&mut self.draw_target)
+                            .draw(self.backend.draw_target())
                             .map_err(|_| MorphError::Backend(""))?;
                     }
                 }
             }
+
+            log("end");
+            self.backend.flush();
         };
 
         if let Some(children_len) = self.context.children_len(id) {
@@ -252,7 +264,7 @@ where
             // let black_backdrop =
             //     Rectangle::new(Point::new(0, 0), Point::new(160, 128)).into_styled(style);
             // black_backdrop
-            //     .draw(&mut self.draw_target)
+            //     .draw(self.backend.draw_target())
             //     .map_err(|_| MorphError::Backend(""))?;
 
             // let color = Color::from("#ffffff");
@@ -264,14 +276,14 @@ where
             // // Create a text at position (20, 30) and draw it using the previously defined style
             // Text::new("Hello Rust!", Point::new(20, 100))
             //     .into_styled(style)
-            //     .draw(&mut self.draw_target)
+            //     .draw(self.backend.draw_target())
             //     .map_err(|_| MorphError::Backend(""))?;
 
             // let image_raw: ImageRawLE<C> =
             //     ImageRaw::new(include_bytes!("../../assets/ferris.raw"), 86, 64);
             // let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 8));
             // image
-            //     .draw(&mut self.draw_target)
+            //     .draw(self.backend.draw_target())
             //     .map_err(|_| MorphError::Backend(""))?;
             self.render = false;
         }
@@ -281,9 +293,9 @@ where
 
     /// Start and run the shell.
     pub fn start(mut self) -> MorphResult<()> {
-        platform::main_loop(move |running| {
+        // platform::main_loop(move |running| {
             if !self.is_running {
-                *running = false;
+                // *running = false;
                 return Ok(());
             }
             self.drain_events()?;
@@ -292,6 +304,6 @@ where
             self.draw()?;
 
             Ok(())
-        })
+        // })
     }
 }

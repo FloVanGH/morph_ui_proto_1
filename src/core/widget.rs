@@ -35,14 +35,15 @@ pub struct Widget<Message, S> where S: IntoStyle {
     id: WidgetId,
     pub name: String<U8>,
     pub is_dirty: bool,
-    pub text: Option<String<U64>>,
+    pub text: Option<&'static str>,
+    // pub text: Option<String<U64>>,
     pub image: Option<&'static [u8]>,
     pub on_tap: Option<Message>,
-    pub layout_style: LayoutStyle,
+    // pub layout_style: LayoutStyle,
     pub drawables: Vec<Drawable, U4>,
     pub size: Size,
     pub style: Option<S>,
-    pub state: Option<State>,
+    // pub state: Option<State>,
 }
 
 impl<Message, S> Widget<Message, S> where S: IntoStyle {
@@ -58,11 +59,11 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
             text: None,
             image: None,
             on_tap: None,
-            layout_style: LayoutStyle::default(),
+            // layout_style: LayoutStyle::default(),
             drawables: Vec::new(),
             size: Size::default(),
             style: None,
-            state: None
+            // state: None
         })
     }
 
@@ -70,21 +71,21 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
         self.id
     }
 
-    pub fn style(&self) -> Option<Style> {
-        if let Some(state) = &self.state {
-            if let Some(style) = &self.style {
-                return Some(style.into_style(state));
-            }
-        }
+    // pub fn style(&self) -> Option<Style> {
+    //     if let Some(state) = &self.state {
+    //         if let Some(style) = &self.style {
+    //             return Some(style.into_style(state));
+    //         }
+    //     }
 
-        None
-    }
+    //     None
+    // }
 
-    pub fn copy_state(&mut self, other: &Widget<Message, S>) {
-        if self.id != other.id || self.name != other.name || other.state.is_none() {
-            return;
-        }
+    // pub fn copy_state(&mut self, other: &Widget<Message, S>) {
+    //     if self.id != other.id || self.name != other.name || other.state.is_none() {
+    //         return;
+    //     }
 
-        self.state = other.state.clone();
-    }
+    //     self.state = other.state.clone();
+    // }
 }

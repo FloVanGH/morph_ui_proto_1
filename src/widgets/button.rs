@@ -75,10 +75,10 @@ where
             .name
             .push_str("Button")
             .map_err(|_| MorphError::OutOfBounds("Could not set name for button."))?;
-        widget.state = Some(State {
-            is_pressed: Some(false),
-        });
-        widget.text = Some(self.text);
+        // widget.state = Some(State {
+        //     is_pressed: Some(false),
+        // });
+        // widget.text = Some(self.text);
         widget
             .drawables
             .push(Drawable::Rectangle)
@@ -87,7 +87,7 @@ where
             .drawables
             .push(Drawable::Text)
             .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to button."))?;
-        widget.layout_style = self.layout_style;
+        // widget.layout_style = self.layout_style;
         Ok(widget)
     }
 }
