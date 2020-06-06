@@ -26,8 +26,10 @@ impl BaseStyle for Theme {
 fn primary_button_style(state: &State) -> Style {
     let mut style = Style::default();
 
-    style.border_width = Some(5);
-    style.border_color = Some(Color::from(CYAN_COLOR));
+    crate::log("blub style");
+
+    style.border_width = Some(2);
+    style.border_color = Some(Color::from(WHITE_COLOR));
 
     if let Some(is_pressed) = state.is_pressed {
         if is_pressed {
@@ -35,7 +37,7 @@ fn primary_button_style(state: &State) -> Style {
             style.color = Some(Color::from(WHITE_COLOR));
         } else {
             style.background = Some(Color::from(BLACK_COLOR));
-            style.color = Some(Color::from(CYAN_COLOR));
+            style.color = Some(Color::from(WHITE_COLOR));
         }      
     }
 

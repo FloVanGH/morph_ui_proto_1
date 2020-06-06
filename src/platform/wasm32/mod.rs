@@ -1,5 +1,8 @@
 use std::{cell::RefCell, rc::Rc};
 
+pub use self::canvas::*;
+
+mod canvas;
 mod utils;
 
 use wasm_bindgen::{prelude::*, JsCast};
@@ -29,21 +32,14 @@ pub fn log(msg: &str) {
 }
 
 /// Platform dependent main loop.
-pub fn main_loop<R: FnMut(&mut bool) -> MorphResult<()> + 'static>(mut run: R) -> MorphResult<()> {
+pub fn main_loop<R: FnMut() -> bool + 'static>(mut run: R) {
     utils::set_panic_hook();
 
-    let err = Rc::new(RefCell::new(Ok(())));
-    let c_err = err.clone();
     let f = Rc::new(RefCell::new(None));
     let g = f.clone();
 
-    let mut running = true;
-
     *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
-        let result = run(&mut running);
-
-        if result.is_err() {
-            *c_err.borrow_mut() = result;
+        if !run() {
             return;
         }
 
@@ -52,7 +48,4 @@ pub fn main_loop<R: FnMut(&mut bool) -> MorphResult<()> + 'static>(mut run: R) -
     }) as Box<dyn FnMut()>));
 
     request_animation_frame(g.borrow().as_ref().unwrap());
-
-    let result = err.borrow();
-    result.clone()
 }

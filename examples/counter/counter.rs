@@ -1,10 +1,11 @@
-use morph::prelude::*;
+use morph::{
+    heapless::{consts::*, String},
+    prelude::*,
+};
 
-use super::Theme;
+use super::{image, Theme};
 
-use heapless::{consts::*, String};
-
-static mut L: String<U16> = String(heapless::i::String::new());
+static mut L: String<U16> = String(morph::heapless::i::String::new());
 
 fn count() -> &'static str {
     unsafe { L.as_str() }
@@ -44,10 +45,7 @@ impl View<Message, Theme> for Counter {
         set_count(self.count);
         Flex::new()?
             .margin(4)
-            .child(
-                ctx,
-                Image::new(include_bytes!("../../assets/rust.raw"), 64, 64)?.margin(4),
-            )?
+            .child(ctx, image()?.margin(4))?
             .child(
                 ctx,
                 Button::new()

@@ -13,6 +13,8 @@ pub use canvas_display;
 
 pub use embedded_graphics;
 
+pub use heapless;
+
 pub mod core;
 pub mod geometry;
 pub mod graphics;

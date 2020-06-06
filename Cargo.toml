@@ -43,7 +43,7 @@ console_error_panic_hook = { version = "0.1.6", optional = true }
 wee_alloc = { version = "0.4.5", optional = true }
 wasm-bindgen-futures = "0.4"
 js-sys = "0.3"
-canvas-display = { git = "https://codeberg.org/morph/canvas-display.git" }
+canvas-display = { git = "https://codeberg.org/morph/canvas-display.git", features = ["offscreen"] }
 [target.wasm32-unknown-unknown.dependencies.web-sys]
     version = "0.3"
     features = [

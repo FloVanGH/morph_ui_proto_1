@@ -43,8 +43,14 @@ mod backend;
 /// The Shell runs always in full screen and could be draw a background. It also runs the application, handles events, execute updates
 /// and drawing. It is possible to operate the shell with different backend for different embedded devices. morph provides a default
 /// set of backend e.g. for WebAssembly and cortex-m processors.
-pub struct Shell<Message: 'static, B: Backend<D, C>, D: DrawTarget<C> + 'static, C: 'static, V: 'static, S: 'static>
-where
+pub struct Shell<
+    Message: 'static,
+    B: Backend<D, C>,
+    D: DrawTarget<C> + 'static,
+    C: 'static,
+    V: 'static,
+    S: 'static,
+> where
     C: PixelColor + From<<C as PixelColor>::Raw>,
     V: View<Message, S>,
     S: IntoStyle,
@@ -55,7 +61,7 @@ where
     context: Context<Message, S>,
     view: Option<V>,
     _phantom: PhantomData<C>,
-    _phantom_d: PhantomData<D>
+    _phantom_d: PhantomData<D>,
 }
 
 impl<Message, B: Backend<D, C>, D: DrawTarget<C>, C, V, S> Shell<Message, B, D, C, V, S>
@@ -66,6 +72,8 @@ where
 {
     /// Creates a new shell with a given render target.
     pub fn new(backend: B) -> Self {
+        let mut backend = backend;
+        backend.init();
         Shell {
             is_running: true,
             render: true,
@@ -73,7 +81,7 @@ where
             context: Context::new(),
             view: None,
             _phantom: PhantomData::default(),
-            _phantom_d: PhantomData::default()
+            _phantom_d: PhantomData::default(),
         }
     }
 
@@ -135,7 +143,7 @@ where
 
     pub fn int_draw(&mut self, id: WidgetId) -> MorphResult<()> {
         if let Some(widget) = self.context.get(id) {
-            self.backend.init();
+           
             log(widget.name);
 
             let style = widget.style();
@@ -193,28 +201,22 @@ where
                             .map_err(|_| MorphError::Backend("Could not draw triangle."))?;
                     }
                     crate::core::Drawable::Text => {
-                       if let Some(text) = widget.text {
+                        if let Some(text) = widget.text {
                             let text = Text::new(text, Point::default());
 
-                            text.into_styled( TextStyleBuilder::new(Font8x16).text_color(C::from(C::Raw::from_u32(Color::from("#ffffff").data))).build())
-                            .draw(self.backend.draw_target())
-                            .map_err(|_| MorphError::Backend("Could not draw text."))?;
-                        } 
+                            let mut style_builder = TextStyleBuilder::new(Font8x16);
 
-                        // let text = Text::new(text.as_str(), Point::default());
+                            if let Some(style) = style {
+                                if let Some(color) = style.color {
+                                    style_builder = style_builder
+                                        .text_color(C::from(C::Raw::from_u32(color.data)));
+                                }
+                            }
 
-                        // let mut style_builder = TextStyleBuilder::new(Font8x16);
-
-                        // if let Some(style) = style {
-                        //     if let Some(color) = style.color {
-                        //         style_builder =
-                        //             style_builder.text_color(C::from(C::Raw::from_u32(color.data)));
-                        //     }
-                        // }
-
-                        // text.into_styled( TextStyleBuilder::new(Font8x16).build())
-                        //     .draw(self.backend.draw_target())
-                        //     .map_err(|_| MorphError::Backend("Could not draw text."))?;
+                            text.into_styled(style_builder.build())
+                                .draw(self.backend.draw_target())
+                                .map_err(|_| MorphError::Backend("Could not draw text."))?;
+                        }
                     }
                     crate::core::Drawable::Image => {
                         if widget.image.is_none() {
@@ -226,10 +228,11 @@ where
                             widget.size.width,
                             widget.size.height,
                         );
-                        let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 8));
+                        log("blub");
+                        let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 0));
                         image
                             .draw(self.backend.draw_target())
-                            .map_err(|_| MorphError::Backend(""))?;
+                            .map_err(|_| MorphError::Backend("Could not draw image."))?;
                     }
                 }
             }
@@ -264,17 +267,17 @@ where
     /// Start and run the shell.
     pub fn run(&mut self) -> MorphResult<bool> {
         // platform::main_loop(move |running| {
-            if !self.is_running {
-                // *running = false;
-                return Ok(false);
-            }
-            self.drain_events()?;
-            self.build()?;
-            self.update()?;
-            self.draw()?;
-            log("end");
+        if !self.is_running {
+            // *running = false;
+            return Ok(false);
+        }
+        self.drain_events()?;
+        self.build()?;
+        self.update()?;
+        self.draw()?;
+        log("end");
 
-            Ok(true)
+        Ok(true)
         // })
     }
 }

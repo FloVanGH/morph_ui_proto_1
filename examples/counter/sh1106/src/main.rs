@@ -24,6 +24,10 @@ use stm32f1xx_hal::{
     stm32,
 };
 
+pub fn image() -> MorphResult<morph::widgets::Image> {
+    Image::new(include_bytes!("../../../../assets/rust.raw"), 64, 64)
+}
+
 #[entry]
 fn main() -> ! {
     let dp = stm32::Peripherals::take().unwrap();
@@ -67,6 +71,10 @@ fn main() -> ! {
         panic!("{:?}", err);
     }
     // }
+
+    loop {
+
+    }
 }
 
 #[exception]

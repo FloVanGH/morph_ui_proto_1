@@ -24,12 +24,12 @@ fn primary_button_style(state: &State) -> Style {
    
     style.border_color = Some(Color::from(WHITE_COLOR));
     style.background = Some(Color::from(BLACK_COLOR));
+    style.color = Some(Color::from(WHITE_COLOR));
 
     if let Some(is_pressed) = state.is_pressed {
         if is_pressed {
             style.border_width = Some(2);
             style.background = Some(Color::from(BLACK_COLOR));
-            style.color = Some(Color::from(WHITE_COLOR));
         } else {
             style.border_width = Some(1);
         }      
