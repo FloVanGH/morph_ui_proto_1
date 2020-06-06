@@ -1,7 +1,7 @@
-use stretch::style::Style as LayoutStyle;
 use heapless::{consts::*, String, Vec};
+use stretch::style::Style as LayoutStyle;
 
-use crate::{result::*, embedded_graphics::geometry::Size};
+use crate::{embedded_graphics::geometry::Size, result::*};
 
 use super::{Drawable, IntoStyle, State, Style};
 
@@ -18,20 +18,28 @@ pub fn get_widget_id() -> MorphResult<WidgetId> {
     let id = unsafe { WIDGET_ID };
 
     if id as usize > MAX_WIDGETS {
-        return Err(MorphError::OutOfBounds("Maximum of widgets is reached. Could not create more widgets."));
+        return Err(MorphError::OutOfBounds(
+            "Maximum of widgets is reached. Could not create more widgets.",
+        ));
     }
 
-    unsafe { WIDGET_ID += 1; }
+    unsafe {
+        WIDGET_ID += 1;
+    }
 
     Ok(id)
 }
 
-pub (crate) fn reset_widget_id() {
-    unsafe { WIDGET_ID = 0; }
+pub(crate) fn reset_widget_id() {
+    unsafe {
+        WIDGET_ID = 0;
+    }
 }
 
-
-pub struct Widget<Message, S> where S: IntoStyle {
+pub struct Widget<Message, S>
+where
+    S: IntoStyle,
+{
     id: WidgetId,
     pub name: &'static str,
     pub is_dirty: bool,
@@ -45,9 +53,12 @@ pub struct Widget<Message, S> where S: IntoStyle {
     pub state: Option<State>,
 }
 
-impl<Message, S> Widget<Message, S> where S: IntoStyle {
+impl<Message, S> Widget<Message, S>
+where
+    S: IntoStyle,
+{
     pub fn new() -> MorphResult<Self> {
-       Self::from_id(get_widget_id()?)
+        Self::from_id(get_widget_id()?)
     }
 
     pub fn from_id(id: WidgetId) -> MorphResult<Self> {
@@ -62,7 +73,7 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
             drawables: Vec::new(),
             size: Size::default(),
             style: None,
-            state: None
+            state: None,
         })
     }
 
@@ -71,20 +82,18 @@ impl<Message, S> Widget<Message, S> where S: IntoStyle {
     }
 
     pub fn style(&self) -> Option<Style> {
-        if let Some(state) = &self.state {
-            if let Some(style) = &self.style {
-                return Some(style.into_style(state));
-            }
+        if let Some(style) = &self.style {
+            return Some(style.into_style(self.state));
         }
 
         None
     }
 
-    // pub fn copy_state(&mut self, other: &Widget<Message, S>) {
-    //     if self.id != other.id || self.name != other.name || other.state.is_none() {
-    //         return;
-    //     }
+    pub fn copy_state(&mut self, other: &Widget<Message, S>) {
+        if self.id != other.id || self.name != other.name || other.state.is_none() {
+            return;
+        }
 
-    //     self.state = other.state.clone();
-    // }
+        self.state = other.state.clone();
+    }
 }

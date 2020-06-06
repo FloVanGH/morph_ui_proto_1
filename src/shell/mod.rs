@@ -92,7 +92,7 @@ where
     fn copy_states(&mut self, id: WidgetId, new_ctx: &mut Context<Message, S>) {
         if let Some(widget) = self.context.get_mut(id) {
             if let Some(new_widget) = &mut new_ctx.get_mut(id) {
-                // new_widget.copy_state(widget);
+                new_widget.copy_state(widget);
             }
         }
 
@@ -263,9 +263,7 @@ where
 
     /// Start and run the shell.
     pub fn run(&mut self) -> MorphResult<bool> {
-        // platform::main_loop(move |running| {
         if !self.is_running {
-            // *running = false;
             return Ok(false);
         }
         self.drain_events()?;
@@ -275,6 +273,5 @@ where
         log("end");
 
         Ok(true)
-        // })
     }
 }

@@ -10,9 +10,11 @@ pub struct Style {
 }
 
 pub trait IntoStyle {
-    fn into_style(&self, state: &State) -> Style;
+    fn into_style(&self, state: Option<State>) -> Style;
 }
 
 pub trait BaseStyle : IntoStyle + Default {
+    fn default_button() -> Self;
     fn primary_button() -> Self;
+    fn default_label() -> Self;
 }

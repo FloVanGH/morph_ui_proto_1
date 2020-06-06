@@ -2,8 +2,8 @@ pub use morph::theme::Theme;
 use morph::{
     canvas_display::CanvasDisplay,
     platform::{main_loop, CanvasBackend},
+    result::*,
     widgets::Image,
-    result::*
 };
 
 use wasm_bindgen::prelude::*;
@@ -17,7 +17,9 @@ pub fn image() -> MorphResult<morph::widgets::Image> {
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    let mut shell = counter::shell(CanvasBackend::new(CanvasDisplay::new(160, 128, "canvas").unwrap()));
+    let mut shell = counter::shell(CanvasBackend::new(
+        CanvasDisplay::new(160, 128, "canvas").unwrap(),
+    ));
 
     main_loop(move || {
         let result = shell.run();

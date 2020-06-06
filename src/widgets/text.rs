@@ -22,7 +22,7 @@ impl<Message, S> Default for Label<Message, S> where S: BaseStyle  {
         Label {
             text: "",
             layout_style: LayoutStyle::default(),
-            style: S::default(),
+            style: S::default_label(),
             _phantom: PhantomData::default()
         }
     }

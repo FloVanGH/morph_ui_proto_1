@@ -26,7 +26,7 @@ where
             on_tap: None,
             text: "",
             layout_style: LayoutStyle::default(),
-            style: S::primary_button(),
+            style: S::default_button(),
         }
     }
 }
