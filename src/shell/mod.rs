@@ -143,15 +143,11 @@ where
 
     pub fn int_draw(&mut self, id: WidgetId) -> MorphResult<()> {
         if let Some(widget) = self.context.get(id) {
-           
-            log(widget.name);
-
             let style = widget.style();
 
             for i in 0..widget.drawables.len() {
                 match widget.drawables.get(i).unwrap().clone() {
                     crate::core::Drawable::Rectangle => {
-                        log("rect");
                         let rectangle = Rectangle::new(Point::new(0, 0), Point::new(50, 30));
 
                         let mut style_builder = PrimitiveStyleBuilder::new();
@@ -228,7 +224,6 @@ where
                             widget.size.width,
                             widget.size.height,
                         );
-                        log("blub");
                         let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 0));
                         image
                             .draw(self.backend.draw_target())
@@ -237,7 +232,7 @@ where
                 }
             }
 
-            log("end render");
+            
         };
 
         if let Some(children_len) = self.context.children_len(id) {
@@ -248,7 +243,6 @@ where
             }
         }
 
-        self.backend.flush();
         Ok(())
     }
 
@@ -260,6 +254,9 @@ where
             }
             self.render = false;
         }
+
+        log("end render");
+        self.backend.flush();
 
         Ok(())
     }
