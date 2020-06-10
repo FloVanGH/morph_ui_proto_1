@@ -49,8 +49,7 @@ impl<Message, S> IntoResult<Widget<Message, S>> for Flex where S: BaseStyle
     fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::from_id(self.id)?;
         widget.name = "Flex";
-        // widget.layout_style = self.layout_style;
-        // widget.children = self.children;
+        widget.layout_style = self.layout_style;
         Ok(widget)
     }
 }

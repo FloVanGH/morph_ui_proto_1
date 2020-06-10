@@ -23,14 +23,14 @@ where
 {
     fn default() -> Self {
         let layout_style = LayoutStyle {
-            size: Size { width: Dimension::Undefined, height: Dimension::Points(32.) },
-            min_size: Size { width: Dimension::Points(32.), height: Dimension::Undefined },
+            size: Size { width:  Dimension::Points(32.), height: Dimension::Points(32.) },
+            // min_size: Size { width: Dimension::Points(32.), height: Dimension::Undefined },
             ..Default::default()
         };
         Button {
             on_tap: None,
             text: "",
-            layout_style: LayoutStyle::default(),
+            layout_style,
             style: S::default_button(),
         }
     }

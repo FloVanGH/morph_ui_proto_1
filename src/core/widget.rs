@@ -1,5 +1,5 @@
 use heapless::{consts::*, String, Vec};
-use stretch::style::Style as LayoutStyle;
+use stretch::{style::Style as LayoutStyle, node::Node};
 
 use crate::{embedded_graphics::geometry::Size, result::*};
 
@@ -51,6 +51,7 @@ where
     pub size: Size,
     pub style: Option<S>,
     pub state: Option<State>,
+    pub node: Option<Node>,
 }
 
 impl<Message, S> Widget<Message, S>
@@ -74,6 +75,7 @@ where
             size: Size::default(),
             style: None,
             state: None,
+            node: None
         })
     }
 

@@ -64,6 +64,7 @@ pub struct Shell<
     context: Context<Message, S>,
     size: (i32, i32),
     view: Option<V>,
+    stretch: Stretch,
     _phantom: PhantomData<C>,
     _phantom_d: PhantomData<D>,
 }
@@ -86,6 +87,7 @@ where
             context: Context::new(),
             size: (0, 0),
             view: None,
+            stretch: Stretch::default(),
             _phantom: PhantomData::default(),
             _phantom_d: PhantomData::default(),
         }
@@ -150,19 +152,18 @@ where
     fn int_layout(
         &mut self,
         id: WidgetId,
-        stretch: &mut Stretch,
-        nodes: &mut Vec<Node, U16>,
+        nodes: &mut Vec<(WidgetId, Node), U16>,
     ) -> MorphResult<()> {
         let mut children: Vec<Node, U16> = Vec::new();
 
         if let Some(children_len) = self.context.children_len(id) {
             for i in 0..children_len {
                 if let Some(child) = self.context.get_child_id(id, i).map(|i| *i) {
-                    self.int_layout(child, stretch, nodes)?;
+                    self.int_layout(child, nodes)?;
                     if nodes.len() > 0 {
                         if let Some(child_node) = nodes.get(nodes.len() - 1) {
                             children
-                                .push(child_node.clone())
+                                .push(child_node.1.clone())
                                 .map_err(|_| MorphError::OutOfBounds("To many children."))?;
                         }
                     }
@@ -171,11 +172,14 @@ where
         }
 
         if let Some(widget) = self.context.get(id) {
-            let node = stretch
+            log(format!("{:?}", widget.name).as_str());
+            log(format!("{:?}", widget.layout_style).as_str());
+            let node = self
+                .stretch
                 .new_node(widget.layout_style.clone(), &children)
                 .map_err(|_| MorphError::OutOfBounds("Could not generate stretch node."))?;
             return nodes
-                .push(node)
+                .push((id, node))
                 .map_err(|_| MorphError::OutOfBounds("Could not add more nodes to layout."));
         }
 
@@ -188,17 +192,16 @@ where
             return Ok(());
         }
 
-        let mut stretch = Stretch::new();
         let mut nodes = Vec::new();
 
         if let Some(root) = self.context.root() {
-            self.int_layout(root, &mut stretch, &mut nodes)?;
+            self.int_layout(root, &mut nodes)?;
 
             if nodes.len() > 0 {
                 if let Some(node) = nodes.get(nodes.len() - 1) {
-                    stretch
+                    self.stretch
                         .compute_layout(
-                            *node,
+                            node.1,
                             Size {
                                 width: Number::Defined(self.size.0 as f32),
                                 height: Number::Defined(self.size.1 as f32),
@@ -209,7 +212,9 @@ where
             }
 
             for node in nodes {
-                log(format!("{:?}", stretch.layout(node).unwrap()).as_str());
+                if let Some(widget) = self.context.get_mut(node.0) {
+                    widget.node = Some(node.1);
+                }
             }
         }
 
@@ -222,89 +227,106 @@ where
         if let Some(widget) = self.context.get(id) {
             let style = widget.style();
 
-            for i in 0..widget.drawables.len() {
-                match widget.drawables.get(i).unwrap().clone() {
-                    crate::core::Drawable::Rectangle => {
-                        let rectangle = Rectangle::new(Point::new(0, 0), Point::new(50, 30));
+            if let Some(node) = widget.node {
+                let layout = self
+                    .stretch
+                    .layout(node)
+                    .map_err(|_| MorphError::Backend("Could not get layout of node"))?;
 
-                        let mut style_builder = PrimitiveStyleBuilder::new();
+                log(format!("{:?}", widget.name).as_str());
+                log(format!("{:?}", widget.layout_style).as_str());
+                log(format!("{:?}", layout).as_str());
 
-                        if let Some(style) = style {
-                            if let Some(background) = style.background {
-                                style_builder = style_builder
-                                    .fill_color(C::from(C::Raw::from_u32(background.data)));
-                            }
+                for i in 0..widget.drawables.len() {
+                    match widget.drawables.get(i).unwrap().clone() {
+                        crate::core::Drawable::Rectangle => {
+                            let rectangle = Rectangle::new(
+                                Point::new(layout.location.x as i32, layout.location.y as i32),
+                                Point::new(
+                                    layout.location.x as i32 + layout.size.width as i32,
+                                    layout.location.y as i32 + layout.size.height as i32,
+                                ),
+                            );
 
-                            if let Some(border_color) = style.border_color {
-                                style_builder = style_builder
-                                    .stroke_color(C::from(C::Raw::from_u32(border_color.data)));
-                            }
-
-                            if let Some(border_width) = style.border_width {
-                                style_builder = style_builder.stroke_width(border_width);
-                            }
-                        }
-
-                        rectangle
-                            .into_styled(style_builder.build())
-                            .draw(self.backend.draw_target())
-                            .map_err(|_| MorphError::Backend("Could not draw rectangle."))?;
-                    }
-                    crate::core::Drawable::Line => {
-                        let line = Line::default();
-
-                        line.into_styled(PrimitiveStyleBuilder::new().build())
-                            .draw(self.backend.draw_target())
-                            .map_err(|_| MorphError::Backend("Could not draw line."))?;
-                    }
-                    crate::core::Drawable::Circle => {
-                        let circle = Circle::default();
-
-                        circle
-                            .into_styled(PrimitiveStyleBuilder::new().build())
-                            .draw(self.backend.draw_target())
-                            .map_err(|_| MorphError::Backend("Could not draw circle."))?;
-                    }
-                    crate::core::Drawable::Triangle => {
-                        let triangle = Triangle::default();
-
-                        triangle
-                            .into_styled(PrimitiveStyleBuilder::new().build())
-                            .draw(self.backend.draw_target())
-                            .map_err(|_| MorphError::Backend("Could not draw triangle."))?;
-                    }
-                    crate::core::Drawable::Text => {
-                        if let Some(text) = widget.text {
-                            let text = Text::new(text, Point::default());
-
-                            let mut style_builder = TextStyleBuilder::new(Font8x16);
+                            let mut style_builder = PrimitiveStyleBuilder::new();
 
                             if let Some(style) = style {
-                                if let Some(color) = style.color {
+                                if let Some(background) = style.background {
                                     style_builder = style_builder
-                                        .text_color(C::from(C::Raw::from_u32(color.data)));
+                                        .fill_color(C::from(C::Raw::from_u32(background.data)));
+                                }
+
+                                if let Some(border_color) = style.border_color {
+                                    style_builder = style_builder
+                                        .stroke_color(C::from(C::Raw::from_u32(border_color.data)));
+                                }
+
+                                if let Some(border_width) = style.border_width {
+                                    style_builder = style_builder.stroke_width(border_width);
                                 }
                             }
 
-                            text.into_styled(style_builder.build())
+                            rectangle
+                                .into_styled(style_builder.build())
                                 .draw(self.backend.draw_target())
-                                .map_err(|_| MorphError::Backend("Could not draw text."))?;
+                                .map_err(|_| MorphError::Backend("Could not draw rectangle."))?;
                         }
-                    }
-                    crate::core::Drawable::Image => {
-                        if widget.image.is_none() {
-                            return Ok(());
-                        }
+                        crate::core::Drawable::Line => {
+                            let line = Line::default();
 
-                        let image_raw: ImageRawLE<C> = ImageRaw::new(
-                            widget.image.unwrap(),
-                            widget.size.width,
-                            widget.size.height,
-                        );
-                        let image: Image<_, C> = Image::new(&image_raw, Point::new(34, 0));
-                        image
-                            .draw(self.backend.draw_target())
-                            .map_err(|_| MorphError::Backend("Could not draw image."))?;
+                            line.into_styled(PrimitiveStyleBuilder::new().build())
+                                .draw(self.backend.draw_target())
+                                .map_err(|_| MorphError::Backend("Could not draw line."))?;
+                        }
+                        crate::core::Drawable::Circle => {
+                            let circle = Circle::default();
+
+                            circle
+                                .into_styled(PrimitiveStyleBuilder::new().build())
+                                .draw(self.backend.draw_target())
+                                .map_err(|_| MorphError::Backend("Could not draw circle."))?;
+                        }
+                        crate::core::Drawable::Triangle => {
+                            let triangle = Triangle::default();
+
+                            triangle
+                                .into_styled(PrimitiveStyleBuilder::new().build())
+                                .draw(self.backend.draw_target())
+                                .map_err(|_| MorphError::Backend("Could not draw triangle."))?;
+                        }
+                        crate::core::Drawable::Text => {
+                            if let Some(text) = widget.text {
+                                let text = Text::new(text, Point::default());
+
+                                let mut style_builder = TextStyleBuilder::new(Font8x16);
+
+                                if let Some(style) = style {
+                                    if let Some(color) = style.color {
+                                        style_builder = style_builder
+                                            .text_color(C::from(C::Raw::from_u32(color.data)));
+                                    }
+                                }
+
+                                text.into_styled(style_builder.build())
+                                    .draw(self.backend.draw_target())
+                                    .map_err(|_| MorphError::Backend("Could not draw text."))?;
+                            }
+                        }
+                        crate::core::Drawable::Image => {
+                            if widget.image.is_none() {
+                                return Ok(());
+                            }
+
+                            let image_raw: ImageRawLE<C> = ImageRaw::new(
+                                widget.image.unwrap(),
+                                widget.size.width,
+                                widget.size.height,
+                            );
+                            let image: Image<_, C> = Image::new(&image_raw, Point::new(layout.location.x as i32, layout.location.y as i32));
+                            image
+                                .draw(self.backend.draw_target())
+                                .map_err(|_| MorphError::Backend("Could not draw image."))?;
+                        }
                     }
                 }
             }
