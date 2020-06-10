@@ -17,7 +17,7 @@ pub fn image() -> MorphResult<morph::widgets::Image> {
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    let mut shell = counter::shell(CanvasBackend::new(
+    let mut shell = counter::shell(160, 128, CanvasBackend::new(
         CanvasDisplay::new(160, 128, "canvas").unwrap(),
     ));
 

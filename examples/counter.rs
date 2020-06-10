@@ -1,15 +1,15 @@
-use morph::{embedded_graphics::{mock_display::MockDisplay}, platform::RaqoteBackend};
+use morph::{embedded_graphics::{mock_display::MockDisplay}, platform::RaqoteBackend, prelude::*};
 pub use morph::theme::Theme;
 
 #[path = "counter/counter.rs"]
 mod counter;
 
 pub fn image() -> MorphResult<morph::widgets::Image> {
-    Image::new(include_bytes!("../../assets/ferris.raw"), 64, 64)
+    Image::new(include_bytes!("../assets/ferris.raw"), 64, 64)
 }
 
 fn main() {
-    let mut shell =  counter::shell(RaqoteBackend::new(MockDisplay::new()));
+    let mut shell =  counter::shell(160, 120, RaqoteBackend::new(MockDisplay::new()));
     loop {
         let result = shell.run();
 

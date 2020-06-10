@@ -62,7 +62,7 @@ fn main() -> ! {
 
     let mut disp: GraphicsMode<_> = Builder::new().connect_i2c(i2c).into();
 
-    let mut shell = counter::shell(Sh1106Backend::new(disp));
+    let mut shell = counter::shell(128, 65, Sh1106Backend::new(disp));
 
     // loop {
     let result = shell.run();

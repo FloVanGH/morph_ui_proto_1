@@ -66,10 +66,12 @@ impl View<Message, Theme> for Counter {
 }
 
 pub fn shell<B: Backend<D, C>, D: DrawTarget<C> + 'static, C: 'static>(
+    width: i32, 
+    height: i32,
     backend: B,
 ) -> Shell<Message, B, D, C, Counter, Theme>
 where
     C: PixelColor + From<<C as PixelColor>::Raw>,
 {
-    Shell::new(backend).view(Counter::default())
+    Shell::new(backend).size(width, height).view(Counter::default())
 }

@@ -1,6 +1,6 @@
 use core::marker::PhantomData;
 
-use stretch::{geometry::Size, node::Node, Stretch};
+use stretch::{geometry::Size, node::Node, number::Number, style::Dimension, Stretch};
 
 use heapless::{consts::*, String, Vec};
 
@@ -59,8 +59,10 @@ pub struct Shell<
 {
     is_running: bool,
     render: bool,
+    update: bool,
     backend: B,
     context: Context<Message, S>,
+    size: (i32, i32),
     view: Option<V>,
     _phantom: PhantomData<C>,
     _phantom_d: PhantomData<D>,
@@ -79,12 +81,19 @@ where
         Shell {
             is_running: true,
             render: true,
+            update: true,
             backend,
             context: Context::new(),
+            size: (0, 0),
             view: None,
             _phantom: PhantomData::default(),
             _phantom_d: PhantomData::default(),
         }
+    }
+
+    pub fn size(mut self, width: i32, height: i32) -> Self {
+        self.size = (width, height);
+        self
     }
 
     // Copy states from old tree to new.
@@ -138,38 +147,73 @@ where
         Ok(())
     }
 
-    fn int_layout(&mut self, id: WidgetId, stretch: &mut Stretch) -> MorphResult<Node> {
+    fn int_layout(
+        &mut self,
+        id: WidgetId,
+        stretch: &mut Stretch,
+        nodes: &mut Vec<Node, U16>,
+    ) -> MorphResult<()> {
         let mut children: Vec<Node, U16> = Vec::new();
+
         if let Some(children_len) = self.context.children_len(id) {
             for i in 0..children_len {
                 if let Some(child) = self.context.get_child_id(id, i).map(|i| *i) {
-                    children
-                        .push(self.int_layout(child, stretch)?)
-                        .map_err(|_| MorphError::OutOfBounds("To many children."))?;
+                    self.int_layout(child, stretch, nodes)?;
+                    if nodes.len() > 0 {
+                        if let Some(child_node) = nodes.get(nodes.len() - 1) {
+                            children
+                                .push(child_node.clone())
+                                .map_err(|_| MorphError::OutOfBounds("To many children."))?;
+                        }
+                    }
                 }
             }
         }
 
         if let Some(widget) = self.context.get(id) {
-            return Ok(stretch
+            let node = stretch
                 .new_node(widget.layout_style.clone(), &children)
-                .map_err(|_| MorphError::OutOfBounds("Could not generate stretch node."))?);
+                .map_err(|_| MorphError::OutOfBounds("Could not generate stretch node."))?;
+            return nodes
+                .push(node)
+                .map_err(|_| MorphError::OutOfBounds("Could not add more nodes to layout."));
         }
 
-        Err(MorphError::Other("b"))
+        Err(MorphError::Other("Could not initialize layout."))
     }
 
     // Updates everything.
     fn update(&mut self) -> MorphResult<()> {
+        if !self.update {
+            return Ok(());
+        }
+
         let mut stretch = Stretch::new();
+        let mut nodes = Vec::new();
 
         if let Some(root) = self.context.root() {
-            let blub = self.int_layout(root, &mut stretch)?;
+            self.int_layout(root, &mut stretch, &mut nodes)?;
 
-            stretch
-                .compute_layout(blub, Size::undefined())
-                .map_err(|_| MorphError::Backend("Could not compute layout"))?;
+            if nodes.len() > 0 {
+                if let Some(node) = nodes.get(nodes.len() - 1) {
+                    stretch
+                        .compute_layout(
+                            *node,
+                            Size {
+                                width: Number::Defined(self.size.0 as f32),
+                                height: Number::Defined(self.size.1 as f32),
+                            },
+                        )
+                        .map_err(|_| MorphError::Backend("Could not compute layout"))?;
+                }
+            }
+
+            for node in nodes {
+                log(format!("{:?}", stretch.layout(node).unwrap()).as_str());
+            }
         }
+
+        self.update = false;
 
         Ok(())
     }
@@ -286,7 +330,7 @@ where
             self.render = false;
         }
 
-        log("end render");
+        // log("end render");
         self.backend.flush();
 
         Ok(())
@@ -301,7 +345,7 @@ where
         self.build()?;
         self.update()?;
         self.draw()?;
-        log("end");
+        // log("end");
 
         Ok(true)
     }
