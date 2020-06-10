@@ -6,4 +6,4 @@ pub use self::text::*;
 mod button;
 mod flex;
 mod image;
-mod text;
+mod text; 

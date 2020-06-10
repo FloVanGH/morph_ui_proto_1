@@ -1,5 +1,7 @@
 use core::marker::PhantomData;
 
+use stretch::{geometry::Size, node::Node, Stretch};
+
 use heapless::{consts::*, String, Vec};
 
 pub use self::platform::log;
@@ -136,8 +138,39 @@ where
         Ok(())
     }
 
+    fn int_layout(&mut self, id: WidgetId, stretch: &mut Stretch) -> MorphResult<Node> {
+        let mut children: Vec<Node, U16> = Vec::new();
+        if let Some(children_len) = self.context.children_len(id) {
+            for i in 0..children_len {
+                if let Some(child) = self.context.get_child_id(id, i).map(|i| *i) {
+                    children
+                        .push(self.int_layout(child, stretch)?)
+                        .map_err(|_| MorphError::OutOfBounds("To many children."))?;
+                }
+            }
+        }
+
+        if let Some(widget) = self.context.get(id) {
+            return Ok(stretch
+                .new_node(widget.layout_style.clone(), &children)
+                .map_err(|_| MorphError::OutOfBounds("Could not generate stretch node."))?);
+        }
+
+        Err(MorphError::Other("b"))
+    }
+
     // Updates everything.
     fn update(&mut self) -> MorphResult<()> {
+        let mut stretch = Stretch::new();
+
+        if let Some(root) = self.context.root() {
+            let blub = self.int_layout(root, &mut stretch)?;
+
+            stretch
+                .compute_layout(blub, Size::undefined())
+                .map_err(|_| MorphError::Backend("Could not compute layout"))?;
+        }
+
         Ok(())
     }
 
@@ -231,8 +264,6 @@ where
                     }
                 }
             }
-
-            
         };
 
         if let Some(children_len) = self.context.children_len(id) {

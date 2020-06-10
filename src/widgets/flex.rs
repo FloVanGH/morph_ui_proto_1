@@ -1,4 +1,4 @@
-use stretch::style::Style;
+use stretch::{style::{Style as LayoutStyle, Display, FlexDirection, Dimension}, geometry::{Size}};
 
 use crate::{
     core::{get_widget_id, BaseStyle, Context, Widget, WidgetId},
@@ -9,14 +9,20 @@ use crate::{
 #[derive(Debug, Default)]
 pub struct Flex {
     id: WidgetId,
-    layout_style: Style,
+    layout_style: LayoutStyle,
 }
 
 impl Flex {
     pub fn new() -> MorphResult<Self> {
+        let layout_style = LayoutStyle {
+            display: Display::Flex,
+            flex_direction: FlexDirection::Row,
+            ..Default::default()
+        };
+
         Ok(Flex {
             id: get_widget_id()?,
-            layout_style: Style::default(),
+            layout_style,
         })
     }
 }

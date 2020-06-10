@@ -52,7 +52,7 @@ impl View<Message, Theme> for Counter {
                     .text("-")
                     .margin((0, 0, 8, 0))
                     .on_tap(Message::Decrement),
-            )?
+            )? 
             .child(ctx, Label::new().text(count()))?
             .child(
                 ctx,
