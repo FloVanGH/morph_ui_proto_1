@@ -1,0 +1,36 @@
+[package]
+authors = ["Florian Blasius <flovanpt@posteo.de>"]
+description = "Embedded Rust UI-Toolkit (no_std)."
+edition = "2018"
+repository = "https://codeberg.org/morph/morph"
+readme = "README.md"
+license = "MIT"
+name = "morph"
+version = "0.1.0"
+keywords = [
+    "embedded",
+    "no_std",
+    "ui",
+]
+
+[lib]
+name = "morph"
+path = "src/lib.rs"
+test = false
+
+[dependencies]
+derive_more = "0.99.7"
+heapless = "0.5.5"
+tinybmp = "0.2.3"
+embedded-graphics = "0.6.2"
+stretch = { git = "https://github.com/vislyhq/stretch.git", default-features = false }
+
+[features]
+default = []
+std = ["stretch/std"]
+
+[profile.release]
+opt-level = "z"
+codegen-units = 1 # better optimizations
+debug = true # symbols are nice and they don't increase the size on Flash
+lto = true # better optimizations

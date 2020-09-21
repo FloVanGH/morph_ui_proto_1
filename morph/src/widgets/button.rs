@@ -1,6 +1,9 @@
 use heapless::{consts::*, String};
 
-use stretch::{style::{Style as LayoutStyle, Dimension}, geometry::{Size}};
+use stretch::{
+    geometry::Size,
+    style::{Dimension, Style as LayoutStyle},
+};
 
 use crate::{
     core::{BaseStyle, Drawable, State, Widget},
@@ -23,7 +26,10 @@ where
 {
     fn default() -> Self {
         let layout_style = LayoutStyle {
-            size: Size { width:  Dimension::Points(32.), height: Dimension::Points(32.) },
+            size: Size {
+                width: Dimension::Points(32.),
+                height: Dimension::Points(32.),
+            },
             // min_size: Size { width: Dimension::Points(32.), height: Dimension::Undefined },
             ..Default::default()
         };
@@ -81,11 +87,11 @@ where
         widget
             .drawables
             .push(Drawable::Rectangle)
-            .map_err(|_| MorphError::OutOfBounds("Could not add rectangle drawable to button."))?;
-        widget 
+            .map_err(|_| MorphError::OutOfBounds("Cannot add rectangle drawable to button."))?;
+        widget
             .drawables
             .push(Drawable::Text)
-            .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to button."))?;
+            .map_err(|_| MorphError::OutOfBounds("Cannot add text drawable to button."))?;
         widget.layout_style = self.layout_style;
         Ok(widget)
     }

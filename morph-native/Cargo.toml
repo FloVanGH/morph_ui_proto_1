@@ -1,0 +1,26 @@
+[package]
+authors = ["Florian Blasius <flovanpt@posteo.de>"]
+description = "Native (desktop | mobile) port of morph embedded Rust UI-Toolkit."
+edition = "2018"
+repository = "https://codeberg.org/morph/morph"
+readme = "README.md"
+license = "MIT"
+name = "morph-native"
+version = "0.1.0"
+keywords = [
+    "embedded",
+    "desktop",
+    "mobile",
+    "ui",
+]
+
+[lib]
+name = "morph_native"
+path = "src/lib.rs"
+test = false
+
+[dependencies]
+embedded-graphics = "0.6"
+morph = { path = "../morph/"}
+raqote-display = { path = "/Users/florian/Projects/raqote-display" }
+orbclient = { git = "https://gitlab.redox-os.org/redox-os/orbclient.git" }

@@ -15,11 +15,14 @@ pub enum MorphError {
     /// An error occurs on the creation of an object.
     Create(&'static str),
 
-    /// Backend (platform specific) error.
-    Backend(&'static str),
+    /// Error specific to draw target.
+    DrawTarget(&'static str),
+
+    /// Layout specific error.
+    Layout(&'static str),
 
     /// Not specified morph error.
-    Other(&'static str)
+    Other(&'static str),
 }
 
 /// Used to convert a value into an other and wrapped by a result.

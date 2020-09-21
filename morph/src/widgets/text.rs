@@ -4,7 +4,7 @@ use heapless::{consts::*, String};
 use stretch::style::Style as LayoutStyle;
 
 use crate::{
-    core::{Drawable, BaseStyle, Widget},
+    core::{BaseStyle, Drawable, Widget},
     geometry::Thickness,
     result::*,
 };
@@ -14,21 +14,27 @@ pub struct Label<Message, S> {
     text: &'static str,
     layout_style: LayoutStyle,
     style: S,
-    _phantom: PhantomData<Message>
+    _phantom: PhantomData<Message>,
 }
 
-impl<Message, S> Default for Label<Message, S> where S: BaseStyle  {
+impl<Message, S> Default for Label<Message, S>
+where
+    S: BaseStyle,
+{
     fn default() -> Self {
         Label {
             text: "",
             layout_style: LayoutStyle::default(),
             style: S::default_label(),
-            _phantom: PhantomData::default()
+            _phantom: PhantomData::default(),
         }
     }
 }
 
-impl<Message, S> Label<Message, S>  where S: BaseStyle {
+impl<Message, S> Label<Message, S>
+where
+    S: BaseStyle,
+{
     pub fn new() -> Self {
         Self::default()
     }
@@ -44,7 +50,9 @@ impl<Message, S> Label<Message, S>  where S: BaseStyle {
     }
 }
 
-impl<Message, S> IntoResult<Widget<Message, S>> for Label<Message, S> where S: BaseStyle
+impl<Message, S> IntoResult<Widget<Message, S>> for Label<Message, S>
+where
+    S: BaseStyle,
 {
     fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::new()?;
@@ -54,7 +62,7 @@ impl<Message, S> IntoResult<Widget<Message, S>> for Label<Message, S> where S: B
         widget
             .drawables
             .push(Drawable::Text)
-            .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to label."))?;
+            .map_err(|_| MorphError::OutOfBounds("Cannot add text drawable to label."))?;
         // widget.layout_style = self.layout_style;
         Ok(widget)
     }

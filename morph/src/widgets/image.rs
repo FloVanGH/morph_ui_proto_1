@@ -5,7 +5,7 @@ use stretch::{
 };
 
 use crate::{
-    core::{Drawable, Widget, BaseStyle},
+    core::{BaseStyle, Drawable, Widget},
     embedded_graphics::geometry::Size,
     geometry::Thickness,
     result::*,
@@ -38,7 +38,10 @@ impl Image {
     }
 }
 
-impl<Message, S> IntoResult<Widget<Message, S>> for Image where S: BaseStyle {
+impl<Message, S> IntoResult<Widget<Message, S>> for Image
+where
+    S: BaseStyle,
+{
     fn into_result(self) -> MorphResult<Widget<Message, S>> {
         let mut widget = Widget::new()?;
         widget.size = self.size;
@@ -47,7 +50,7 @@ impl<Message, S> IntoResult<Widget<Message, S>> for Image where S: BaseStyle {
         widget
             .drawables
             .push(Drawable::Image)
-            .map_err(|_| MorphError::OutOfBounds("Could not add text drawable to label."))?;
+            .map_err(|_| MorphError::OutOfBounds("Cannot add text drawable to label."))?;
         widget.layout_style = self.layout_style;
         Ok(widget)
     }
