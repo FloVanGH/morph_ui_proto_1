@@ -53,7 +53,7 @@ fn default_button(state: Option<State>) -> Style {
                 style.background = Some(Color::from(CYAN_COLOR));
                 style.color = Some(Color::from(WHITE_COLOR));
             } else {
-                style.background = Some(Color::from(BLACK_COLOR));
+                style.background = Some(Color::from(WHITE_COLOR));
                 style.color = Some(Color::from(WHITE_COLOR));
             }
         }

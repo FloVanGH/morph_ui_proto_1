@@ -30,14 +30,12 @@ where
 
         let (screen_width, screen_height) = orbclient::get_display_size().unwrap();
 
-        let window_flags = vec![WindowFlag::Async];
-        let window = Window::new_flags(
+        let window = Window::new(
             ((screen_width - width) / 2) as i32,
             ((screen_height - height) / 2) as i32,
             width,
             height,
             "morph native shell",
-            &window_flags,
         )
         .ok_or(0)
         .map_err(|_| MorphError::Create("Cannot create orbclient window."))?;
@@ -50,10 +48,10 @@ where
         Ok(self)
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self) -> MorphResult<()> {
         // let mut loop_started = Instant::now();
         'events: loop {
-            self.shell.run();
+            self.shell.run()?;
 
             let color_data: Vec<orbclient::Color> = self
                 .shell
@@ -84,5 +82,7 @@ where
             // self.shell.tick(loop_started.elapsed());
             // loop_started = Instant::now();
         }
+
+        Ok(())
     }
 }

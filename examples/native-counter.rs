@@ -69,7 +69,5 @@ impl View<Message, Theme> for Counter {
 }
 
 fn main() -> MorphResult<()> {
-    let shell = NativeShell::new(640, 240)?.view(Counter::default())?.run();
-
-    Ok(())
+    NativeShell::new(640, 240)?.view(Counter::default())?.run()
 }

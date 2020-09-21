@@ -21,6 +21,6 @@ test = false
 
 [dependencies]
 embedded-graphics = "0.6"
-morph = { path = "../morph/"}
+morph = { path = "../morph/", features = ["std"] }
 raqote-display = { path = "/Users/florian/Projects/raqote-display" }
 orbclient = { git = "https://gitlab.redox-os.org/redox-os/orbclient.git" }

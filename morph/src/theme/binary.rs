@@ -42,14 +42,14 @@ fn default_button(state: Option<State>) -> Style {
     let mut style = Style::default();
 
     style.border_color = Some(Color::from(WHITE_COLOR));
-    style.background = Some(Color::from(BLACK_COLOR));
+    style.background = Some(Color::from(WHITE_COLOR));
     style.color = Some(Color::from(WHITE_COLOR));
 
     if let Some(state) = state {
         if let Some(is_pressed) = state.is_pressed {
             if is_pressed {
                 style.border_width = Some(2);
-                style.background = Some(Color::from(BLACK_COLOR));
+                style.background = Some(Color::from(WHITE_COLOR));
             } else {
                 style.border_width = Some(1);
             }
@@ -67,11 +67,11 @@ fn primary_button(state: Option<State>) -> Style {
             if is_pressed {
                 style.border_color = Some(Color::from(WHITE_COLOR));
                 style.border_width = Some(2);
-                style.background = Some(Color::from(BLACK_COLOR));
+                style.background = Some(Color::from(WHITE_COLOR));
                 style.color = Some(Color::from(WHITE_COLOR));
             } else {
                 style.background = Some(Color::from(WHITE_COLOR));
-                style.color = Some(Color::from(BLACK_COLOR));
+                style.color = Some(Color::from(WHITE_COLOR));
             }
         }
     }
